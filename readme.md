@@ -17,14 +17,6 @@ Esta aplicación de gestión de turnos buscaria optimizar la asignación y admin
 - Gestión de Recurrentes: Posibilidad de programar turnos periódicos para tratamientos o consultas regulares.
 - Perfiles de Profesionales/Servicios: Creación de perfiles detallados para cada profesional o servicio, incluyendo especialidad, disponibilidad, datos de contacto y, si aplica, biografía o experiencia.
 - Servicios Configurables: Definicion de diferentes tipos de servicios (consultas, estudios, tratamientos) con duraciones y costos asociados.
-- Gestión de Múltiples Ubicaciones: Ideal para clínicas, consultorios o empresas con varias sedes, permitiendo a los usuarios seleccionar la ubicación deseada.
-- Estadísticas de Ocupación: Generación de reportes sobre la cantidad de turnos tomados, anulados, asistidos y no asistidos.
-- Análisis de Demanda: Información sobre los horarios y servicios más solicitados para optimizar la oferta.
-- Rendimiento de Profesionales: Evaluación de la productividad de los profesionales basada en la gestión de sus turnos.
-- Pagos Online: Integración de pasarelas de pago para que los usuarios puedan abonar los servicios al momento de reservar el turno o previo a la cita.
-- Sistema de Reputación y Reseñas: Permitir a los usuarios calificar y dejar comentarios sobre los profesionales o servicios recibidos (con moderación para el sector salud).
-- Plataforma de Fidelización: Implementación de programas de puntos, descuentos o membresías para usuarios recurrentes.
-
 
 ## Posibles Usuarios de la Aplicación
 La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un amplio abanico de usuarios, tanto proveedores como consumidores de servicios.
@@ -37,18 +29,6 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 - Laboratorios de Análisis Clínicos.
 - Veterinarias.
 - Centros de Estética Médica.
-
-2. Otros Sectores (Adaptabilidad)
-
-- Salones de Belleza y Peluquerías: Reservas de turnos para cortes, tinturas, manicuras, etc.
-- Spas y Centros de Bienestar: Citas para masajes, tratamientos faciales, saunas.
-- Gimnasios y Entrenadores Personales: Clases grupales, sesiones individuales.
-- Talleres Mecánicos: Turnos para revisión, mantenimiento o reparación de vehículos.
-- Estudios de Abogados o Contadores: Consultas con profesionales.
-- Centros de Capacitación y Clases Particulares: Reservas de horarios con profesores.
-- Servicios de Reparación y Mantenimiento a Domicilio: Coordinación de visitas técnicas.
-- Entidades Gubernamentales: Agendamiento de citas para trámites o atención al público.
-- Restaurantes: Reservas de mesas (aunque existen plataformas específicas, podría ser una opción).
 
 
 ## Participantes:
