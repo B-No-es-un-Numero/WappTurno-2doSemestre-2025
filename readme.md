@@ -34,7 +34,7 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 ## Participantes:
 Buenas noches, mi nombre es Alvaro Fernando Galiño Velez, tengo 43 años y vivo en Unquillo-Cordoba. Tengo alguna base minima de programacion tanto teorica como practica, pero aqui me encuentro dispuesto a aceptar el desafio de perfeccionar y acrecentar conocimientos!
 
-Hola, soy *Flavia Guadalupe Sicchar Gómez*, tengo 44 años. Tratando de aprender
+Hola, soy *Flavia Guadalupe Sicchar Gómez*, tengo 44 años. Me encuentro ubicada generalmente en la localidad de Tío Pujio pero en ocasiones también estoy en Córdoba Capital. Soy trabajadora independiente. Carezco absolutamente de expertise en programación, con excepción de los ejercicios del primer semestre, son mis primeros pasos, aún me cuesta comprender en referencia al funcionamiento pero creo que es cuestión de estudio y de mucha práctica. Mi meta en este año es adquirir nuevas herramientas, actualemnte estoy estudiando la presente carrera ya que me la aconsejaron para estimular la mente. 
 
 Mi nombre es *Melina Belén Bruvera*, tengo 27 años y vivo en James Craik, Córdoba. Arranque mi camino como desarrolladora Front End en el 2020, mi objetivo es reforzar conocimientos en mi area de trabajo y aprender nuevas habilidades en el Back End! 
 
