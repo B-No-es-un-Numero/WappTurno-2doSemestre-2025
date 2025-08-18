@@ -40,3 +40,6 @@ Mi nombre es *Melina Belén Bruvera*, tengo 27 años y vivo en James Craik, Cór
 
 [Guillermo Diván](https://github.com/GuillermoDivan) .
 Aunque me especializo en backend, cuento co experiencia previa en desarrollo fullstack. He liderado equipos, coordinado proyectos aplicando metodologías ágiles, y desarrollado soluciones eficientes y personalizadas en contextos reales. Mi enfoque colaborativo, mi capacidad de análisis y resolución de problemas, junto con una comunicación empática y clara, me permiten integrarme rápidamente, generar valor en el equipo y contribuir al desarrollo de productos sólidos, funcionales y orientados a las necesidades de los usuarios.
+
+*Joaquín Romero* ,tengo 36 años de Córdoba capital . 
+Comencé mi camino en la programacion de manera autodidacta. Actualmente trabajo en el sector turismo pero mi objetivo es desarrollarme como programador fullstack y obtener mi primera oportunidad laboral en el mundo IT. 
