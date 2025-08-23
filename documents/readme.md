@@ -43,3 +43,5 @@ Aunque me especializo en backend, cuento co experiencia previa en desarrollo ful
 
 *Joaquín Romero* ,tengo 36 años de Córdoba capital . 
 Comencé mi camino en la programacion de manera autodidacta. Actualmente trabajo en el sector turismo pero mi objetivo es desarrollarme como programador fullstack y obtener mi primera oportunidad laboral en el mundo IT. 
+
+*Gabriel Natale* Comencé a estudiar de manera autodidacta en los inicios de la pandemia, explorando distintas áreas de la programación y la tecnología. Si bien ya contaba con algunos conocimientos previos, decidí iniciar la tecnicatura para darle mayor impulso y dirección a mi formación, sumando bases sólidas y prácticas de desarrollo profesional. Además, mis habilidades como coach profesional me aportan herramientas valiosas para la comunicación y el trabajo en equipo. Creo firmemente que siempre existe un área de mejora personal y colectiva, y busco aplicar esa mentalidad de aprendizaje continuo y compromiso para contribuir de forma positiva al grupo.
