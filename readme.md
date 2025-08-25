@@ -1,9 +1,9 @@
 # B No es un Número - Proyecto integrador 1
 ## Título del Proyecto: WappTurno: Gestión de Turnos con WhatsApp
 ## Descripción del proyecto
-El proyecto elegido para desarrollar en el área de la salud es un sistema web de gestión de turnos, que permitirá a los usuarios realizar altas, ediciones y cancelaciones de sus turnos de manera sencilla y eficiente.
+El proyecto elegido para desarrollar en el área de la salud es un sistema web de gestión de turnos, que permitirá a los usuarios realizar altas, ediciones y cancelaciones de sus turnos de manera sencilla y eficiente. Además como incorporación de la futura tienda virtual se agregará como parte del flujo una pasarela de pago donde los usuarios puedan pagar sus consultas de forma adelantada.
 
-Como valor agregado, el sistema incorporará la integración con WhatsApp para el envío automático de mensajes de confirmación y recordatorio de los turnos solicitados, mejorando así la comunicación con los pacientes.
+Como valor agregado, el sistema incorporará la integración con WhatsApp para el envío automático de mensajes de confirmación y recordatorio de los turnos solicitados, mejorando así la comunicación con los pacientes
 
 
 ## Funcionalidades y/o areas de enfoque del proyecto 
@@ -30,6 +30,16 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 - Veterinarias.
 - Centros de Estética Médica.
 
+
+## Tecnologías utilizadas
+**Front end:**
+- **HTML5** → estructura del contenido.
+- **CSS3** → estilos y diseño responsivo.
+- **JavaScript** → interacción y lógica en el navegador.
+
+**Back end:**
+- **Python** → lenguaje principal para la lógica del servidor.
+- **MySQL** → base de datos relacional para almacenar la información.
 
 ## Participantes:
 Buenas noches, mi nombre es Alvaro Fernando Galiño Velez, tengo 43 años y vivo en Unquillo-Cordoba. Tengo alguna base minima de programacion tanto teorica como practica, pero aqui me encuentro dispuesto a aceptar el desafio de perfeccionar y acrecentar conocimientos!
