@@ -6,11 +6,12 @@ import mysql.connector
 class UserDAO: 
 
     def __init__(self):
-        self.__connection = connection_mysql().create_connection()
-        
+       pass
+
     def register_user(self, created_user: User):
+        connection=connection_mysql().create_connection()
         try:
-            with self.__connection.cursor() as cursor:
+            with connection.cursor() as cursor:
                 query= ("INSERT INTO User (user_id, name, surname, "
                     "dni, email, password, role, date_of_birth, enabled) "
                     "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)")
@@ -26,6 +27,7 @@ class UserDAO:
                 self.__connection.commit()
         except mysql.connector.Error as error:
             raise f"Error al insertar, {error}"
+        finally: connection.close()
         return created_user
         
 
