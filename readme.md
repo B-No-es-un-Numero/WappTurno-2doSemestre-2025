@@ -51,9 +51,9 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 
 
 ## Participantes:
-*Alvaro Fernando Galiño Velez*
-*Flavia Guadalupe Sicchar Gómez*
-*Gabriel Natale* 
-*Guillermo Diván*
-*Joaquín Romero* 
-*Melina Belén Bruvera*
+ - *Alvaro Fernando Galiño Velez*
+ - *Flavia Guadalupe Sicchar Gómez*
+ - *Gabriel Natale* 
+ - *Guillermo Diván*
+ - *Joaquín Romero* 
+ - *Melina Belén Bruvera*
