@@ -41,6 +41,15 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 - **Python** → lenguaje principal para la lógica del servidor.
 - **MySQL** → base de datos relacional para almacenar la información.
 
+
+## Consideraciones técnicas
+**Backend**
+- Se optó por un patrón arquitectónico DAO, a fin de separar claramente la lógica de negocio de la conexión y trabajo con la db.
+- Para el sprint 1, atendiendo a que solamente se trabajó con las funcionalidades del usuario, se sostuvo una modularización mínima (módulos User.py, User_service.py, User_DAO.py). Las carpetas necesarias (models, services, dao, etc), así como interfases y demás clases planteadas en los diagramas serán añadidas en posteriores sprint, de acuerdo a los requerimientos específicos del módulo de fullstack. 
+- Para facilitar el trabajo colectivo, cada desarrollador generó un entorno virtual en el cual se cargaron los requerimientos de packages con sus correspondientes versiones.
+- También se trabajó incorporando .env para evitar la exposición de información sensible sobre la base de datos, así como .gitignore, para no sobrecargar el proyecto con archivos innecesarios.
+
+
 ## Participantes:
 Buenas noches, mi nombre es Alvaro Fernando Galiño Velez, tengo 43 años y vivo en Unquillo-Cordoba. Tengo alguna base minima de programacion tanto teorica como practica, pero aqui me encuentro dispuesto a aceptar el desafio de perfeccionar y acrecentar conocimientos!
 
