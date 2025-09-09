@@ -1,5 +1,5 @@
-# B No es un Número - Proyecto integrador 1
-## Título del Proyecto: WappTurno: Gestión de Turnos con WhatsApp
+# WappTurno: Gestión de Turnos con WhatsApp
+## Título del Proyecto: 
 ## Descripción del proyecto
 El proyecto elegido para desarrollar en el área de la salud es un sistema web de gestión de turnos, que permitirá a los usuarios realizar altas, ediciones y cancelaciones de sus turnos de manera sencilla y eficiente. Además como incorporación de la futura tienda virtual se agregará como parte del flujo una pasarela de pago donde los usuarios puedan pagar sus consultas de forma adelantada.
 
@@ -51,16 +51,9 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 
 
 ## Participantes:
-Buenas noches, mi nombre es Alvaro Fernando Galiño Velez, tengo 43 años y vivo en Unquillo-Cordoba. Tengo alguna base minima de programacion tanto teorica como practica, pero aqui me encuentro dispuesto a aceptar el desafio de perfeccionar y acrecentar conocimientos!
-
-Hola, soy *Flavia Guadalupe Sicchar Gómez*, tengo 44 años. Me encuentro ubicada generalmente en la localidad de Tío Pujio pero en ocasiones también estoy en Córdoba Capital. Soy trabajadora independiente. Carezco absolutamente de expertise en programación, con excepción de los ejercicios del primer semestre, son mis primeros pasos. Aún me cuesta comprender en referencia al funcionamiento pero creo que es cuestión de estudio y de mucha práctica. Mi meta en este año es adquirir nuevas herramientas, actualemnte estoy estudiando la presente carrera y otros cursos cortos ya que me la aconsejaron para estimular la mente. Estoy en un grupo que por suerte me contiene y apoya lo cual agradezco. A fin de no retrasar también estaré practicando en un paralelo al que llamo Alter Ego.
-
-Mi nombre es *Melina Belén Bruvera*, tengo 27 años y vivo en James Craik, Córdoba. Arranque mi camino como desarrolladora Front End en el 2020, mi objetivo es reforzar conocimientos en mi area de trabajo y aprender nuevas habilidades en el Back End! 
-
-[Guillermo Diván](https://github.com/GuillermoDivan) .
-Aunque me especializo en backend, cuento co experiencia previa en desarrollo fullstack. He liderado equipos, coordinado proyectos aplicando metodologías ágiles, y desarrollado soluciones eficientes y personalizadas en contextos reales. Mi enfoque colaborativo, mi capacidad de análisis y resolución de problemas, junto con una comunicación empática y clara, me permiten integrarme rápidamente, generar valor en el equipo y contribuir al desarrollo de productos sólidos, funcionales y orientados a las necesidades de los usuarios.
-
-*Joaquín Romero* ,tengo 36 años de Córdoba capital . 
-Comencé mi camino en la programacion de manera autodidacta. Actualmente trabajo en el sector turismo pero mi objetivo es desarrollarme como programador fullstack y obtener mi primera oportunidad laboral en el mundo IT. 
-
-*Gabriel Natale* Comencé a estudiar de manera autodidacta en los inicios de la pandemia, explorando distintas áreas de la programación y la tecnología. Si bien ya contaba con algunos conocimientos previos, decidí iniciar la tecnicatura para darle mayor impulso y dirección a mi formación, sumando bases sólidas y prácticas de desarrollo profesional. Además, mis habilidades como coach profesional me aportan herramientas valiosas para la comunicación y el trabajo en equipo. Creo firmemente que siempre existe un área de mejora personal y colectiva, y busco aplicar esa mentalidad de aprendizaje continuo y compromiso para contribuir de forma positiva al grupo.
+*Alvaro Fernando Galiño Velez*
+*Flavia Guadalupe Sicchar Gómez*
+*Gabriel Natale* 
+*Guillermo Diván*
+*Joaquín Romero* 
+*Melina Belén Bruvera*
