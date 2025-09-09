@@ -1,5 +1,5 @@
 # WappTurno: Gestión de Turnos con WhatsApp
-## Título del Proyecto: 
+
 ## Descripción del proyecto
 El proyecto elegido para desarrollar en el área de la salud es un sistema web de gestión de turnos, que permitirá a los usuarios realizar altas, ediciones y cancelaciones de sus turnos de manera sencilla y eficiente. Además como incorporación de la futura tienda virtual se agregará como parte del flujo una pasarela de pago donde los usuarios puedan pagar sus consultas de forma adelantada.
 
