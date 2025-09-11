@@ -1,3 +1,4 @@
+from datetime import datetime
 from User import User
 from Role_enum import RoleEnum
 from User_DAO import UserDAO
@@ -21,8 +22,15 @@ class UserService:
             print("Contraseña inválida. Recuerde que debe tener" \
             " longitud de 6 caracteres mínimo e incluir letras y números. \n")
             return None
+
+        try:
+            dob_datetime = datetime.strptime(date_of_birth, "%d-%m-%Y")
+            date_of_birth_formatted = dob_datetime.strftime("%d/%m/%Y")
+        except ValueError:
+            print("Fecha inválida. Use el formato YYYY-MM-DD.\n")
+            return None
         
-        created_user = User(name, surname, dni, email, password, role, date_of_birth)
+        created_user = User(name, surname, dni, email, password, role, date_of_birth_formatted)
 
         self.__dao.register_user(created_user)
 
@@ -57,7 +65,7 @@ class UserService:
     def get_all_users(self) -> list['User']:
         users = self.__dao.get_all_users()
         return users
-
+   
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         users = self.__dao.get_all_users_by_role(role)
         return users
@@ -74,8 +82,7 @@ class UserService:
             "longitud de 6 caracteres mínimo e incluir letras y números. \n")
             return None
         
-        user = self.__dao.update_user(name=name, surname=surname,
-                                      password=password, email=email)
+        user = self.__dao.update_user(name, surname, password, email)
 
         return user
 
@@ -87,6 +94,6 @@ class UserService:
         self.__dao.change_user_role(user_id, role)
         return True
 
-    def disable_account(self, user_email: str) -> bool:
-        self.__dao.disable_account(user_email)
-        return True
+    def disable_account(self, user_email: str,) -> 'User':
+        user = self.__dao.disable_account(user_email,)
+        return user

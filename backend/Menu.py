@@ -55,11 +55,14 @@ class Menu():
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
                     continue
-                data = self.__service.get_all_users()
-                if not data:
+                users = self.__service.get_all_users()
+                if not users:
                     print("No se encuentran usuarios activos en sistema! \n")
                 else:
-                    print(f"Lista de usuarios activos: {data} \n")
+                    print(f"Lista de usuarios activos: {users} \n")
+                    for user in users:
+                        print(f"- {user.name} {user.surname}")
+                    print()
                 
             elif option == "4":
                 if (self.current_user == None):
@@ -170,9 +173,11 @@ class Menu():
                         self.current_user = None
                         print("La cuenta se eliminó exitosamente. Presione 0 para salir "
                         "o presione 2 para ingresar con otra cuenta. \n")
+                    else:
+                        print("No se pudo eliminar la cuenta. Verifique el email.")
 
             elif option == "0":
-                print("Saliendo de Nodo Inmobiliario...\n ")
+                print("Saliendo de WappTurno...\n ")
                 break
             
             else:
