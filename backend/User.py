@@ -7,11 +7,12 @@ class User:
         self,
         name: str,
         surname: str,
-        dni: str,
+        dni: int,
         email: str,
         password: str,
+        phone_number: int,
         role: RoleEnum,
-        date_of_birth: str
+        date_of_birth: date
     ):
         self.user_id = str(uuid.uuid4())
         self.name = name
@@ -19,6 +20,7 @@ class User:
         self.dni = dni
         self.email = email
         self.__password = password
+        self.__phone_number = phone_number
         self.role = role
         self.date_of_birth = date_of_birth
         self.enabled = True
@@ -76,6 +78,14 @@ class User:
     @password.setter
     def password(self, value):
         self.__password = value
+
+    @property
+    def phone_number(self):
+        return self.__phone_number
+
+    @phone_number.setter
+    def phone_number(self, value):
+        self.__phone_number = value
 
     @property
     def role(self):
