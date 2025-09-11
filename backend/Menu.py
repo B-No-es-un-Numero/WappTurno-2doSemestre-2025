@@ -12,15 +12,17 @@ class Menu():
             if (self.current_user != None):
                 print(f"Usuario conectado: {self.current_user.email} \n")
             option = input("Elija una opción: \n1. Registrarse. \n" \
-            "2. Ingresar a la app. \n3. Ver listado de usuarios. \n"
-            "4. Ver listado de usuarios por rol. \n5. Buscar usuario por id. \n"
-            "6. Buscar usuario por email. \n7. Editar datos de usuario. \n"
-            "8. Cambiar rol de usuario. \n9. Eliminar la cuenta. \n"
+            "2. Ingresar a la app. \n3. Ver listado de usuarios (solo admin). \n"
+            "4. Ver listado de usuarios por rol (solo admin). \n5. Buscar usuario por id (solo admin). \n"
+            "6. Buscar usuario por email (solo admin). \n"
+            "7.Editar datos de usuario. \n8. Cambiar rol de usuario (solo admin). \n"
+            "9. Dar de baja la cuenta. \n10. Eliminar definitivamente la cuenta(solo admin). \n"
             "0. Salir. \n")
             if option == "1":
                 name = input("Ingrese su nombre: ")
                 surname = input("Ingrese su apellido: ")
-                dni = input("Ingrese su dni: ")
+                dni = int(input("Ingrese su dni: "))
+                phone_number = int(input("Ingrese su número de teléfono: "))
                 email = input("Ingrese su email: ")
                 password = input("Ingrese su contraseña. " \
                 "Recuerde que debe tener mínimo 6 caracteres e incluir números y letras: ")
@@ -39,9 +41,9 @@ class Menu():
                 else:
                     print("Rol no reconocido. Ingrese un rol válido.\n")
                     continue
-                date_of_birth = input("Ingrese su fecha de nacimiento")
+                date_of_birth = input("Ingrese su fecha de nacimiento: ")
                 created_user = self.__service.register(name=name, surname=surname, dni=dni,
-                                                       email=email, password=password,
+                                                       email=email, password=password, phone_number=phone_number,
                                                        role=role, date_of_birth=date_of_birth)
                 if (created_user):
                     print("Usuario creado exitosamente. Puede proceder a iniciar sesión. \n")
@@ -51,19 +53,30 @@ class Menu():
                 password = input("Ingrese su contraseña: ")
                 self.current_user = self.__service.login(email, password)
 
+            #Solo admin (Fullstack requirement)
             elif option == "3":
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
                     continue
-                data = self.__service.get_all_users()
-                if not data:
+                if (self.current_user.role != RoleEnum.ADMIN):
+                    print("Error, acción solo accesible para admin! \n")
+                    continue
+                users = self.__service.get_all_users()
+                if not users:
                     print("No se encuentran usuarios activos en sistema! \n")
                 else:
-                    print(f"Lista de usuarios activos: {data} \n")
-                
+                    print(f"Lista de usuarios activos: {users} \n")
+                    for user in users:
+                        print(f"- {user.name} {user.surname}")
+                    print()
+
+            #Solo admin (Fullstack requirement)    
             elif option == "4":
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
+                    continue
+                if (self.current_user.role != RoleEnum.ADMIN):
+                    print("Error, acción solo accesible para admin! \n")
                     continue
                 role = None
                 while (role == None):
@@ -83,6 +96,8 @@ class Menu():
                 else:
                     print(f"Lista de usuarios con rol seleccionado: {data} \n")
 
+
+            #Solo admin (Fullstack requirement)
             elif option == "5":
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
@@ -97,12 +112,13 @@ class Menu():
                 else:
                     print(f"El usuario encontrado es: {user_found} \n")
 
+            #Solo admin (Fullstack requirement)
             elif option == "6":
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
                     continue
-                if (self.current_user.role != RoleEnum.PATIENT and self.current_user.role != RoleEnum.DOCTOR):
-                    print("Error, acción solo accesible para paciente o profesional de salud! \n")
+                if (self.current_user.role != RoleEnum.ADMIN):
+                    print("Error, acción solo accesible para admin! \n")
                     continue
                 email = input("Ingrese el email del usuario que desea buscar: ")
                 user_found = self.__service.get_user_by_email(email)
@@ -134,6 +150,7 @@ class Menu():
                     if (updated_user):
                         print(f"Usuario modificado exitosamente!  {updated_user} \n") 
 
+            #Solo admin (Fullstack requirement)
             elif option == "8":
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
@@ -168,11 +185,29 @@ class Menu():
                     disabled_user = self.__service.disable_account(input_email)
                     if (disabled_user):
                         self.current_user = None
-                        print("La cuenta se eliminó exitosamente. Presione 0 para salir "
+                        print("La cuenta se dio de baja exitosamente. Presione 0 para salir "
                         "o presione 2 para ingresar con otra cuenta. \n")
+                    else:
+                        print("No se pudo eliminar la cuenta. Verifique el email.")
+
+            #Solo admin (Fullstack requirement)
+            elif option == "10":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
+                if (self.current_user.role != RoleEnum.ADMIN):
+                    print("Error, acción solo accesible para admin! \n")
+                    continue
+                input_email = input("Ingrese la dirección de " \
+                "email para eliminar definitivamente la cuenta: ")
+                deleted_user = self.__service.delete_account(input_email)
+                if (deleted_user):
+                    print("La cuenta se eliminó exitosamente. \n")
+                else:
+                    print("No se pudo eliminar la cuenta. Verifique el email.")
 
             elif option == "0":
-                print("Saliendo de Nodo Inmobiliario...\n ")
+                print("Saliendo de WappTurno...\n ")
                 break
             
             else:
