@@ -190,12 +190,12 @@ class UserDAO:
         finally: self.__connection.close()
         
     
-    def change_user_role(self, user_id: str, role: RoleEnum) -> bool:
+    def change_user_role(self, user_email: str, role: RoleEnum) -> bool:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Users SET role = %s WHERE user_id = %s")
-                cursor.execute(query, (role, user_id,))
+                query= ("UPDATE Users SET role = %s WHERE email = %s")
+                cursor.execute(query, (role, user_email,))
                 self.__connection.commit()
                 return True
         except mysql.connector.Error as error:

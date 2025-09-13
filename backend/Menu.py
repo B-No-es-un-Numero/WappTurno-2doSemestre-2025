@@ -15,8 +15,8 @@ class Menu():
             "2. Ingresar a la app. \n3. Ver listado de usuarios (solo admin). \n"
             "4. Ver listado de usuarios por rol (solo admin). \n5. Buscar usuario por id (solo admin). \n"
             "6. Buscar usuario por email (solo admin). \n"
-            "7.Editar datos de usuario. \n8. Cambiar rol de usuario (solo admin). \n"
-            "9. Dar de baja la cuenta. \n10. Eliminar definitivamente la cuenta(solo admin). \n"
+            "7. Editar datos de usuario (solo propia cuenta). \n8. Cambiar rol de usuario (solo admin). \n"
+            "9. Dar de baja la cuenta (solo propia cuenta). \n10. Eliminar definitivamente la cuenta(solo admin). \n"
             "0. Salir. \n")
             if option == "1":
                 name = input("Ingrese su nombre: ")
@@ -139,16 +139,18 @@ class Menu():
                     print("Reingrese los valores para cada campo.")
                     name = input("Ingrese su nombre: ")
                     surname = input("Ingrese su apellido: ")
+                    dni = int(input("Ingrese su dni: "))
+                    phone_number = int(input("Ingrese su número telefónico: "))
                     password = input("Ingrese su contraseña. " \
                     "Recuerde que debe tener mínimo 6 caracteres e incluir números y letras: ")
                     repeat_password = input("Ingrese nuevamente su contraseña: ")
                     if (password != repeat_password):
                         print("Las contraseñas no coinciden. Por favor, vuelva a intentarlo. \n")
                         continue
-                    updated_user = self.__service.update_user(name=name, surname=surname, 
-                                                                 email=input_email, password=password)
+                    updated_user = self.__service.update_user(name=name, surname=surname, dni=dni, 
+                                                email=input_email, phone_number=phone_number, password=password)
                     if (updated_user):
-                        print(f"Usuario modificado exitosamente!  {updated_user} \n") 
+                        print(f"Usuario modificado exitosamente! \n") 
 
             #Solo admin (Fullstack requirement)
             elif option == "8":
@@ -170,8 +172,8 @@ class Menu():
                     else:
                         print("Rol no reconocido. Ingrese un rol válido.\n")
                         continue
-                user_id = input("Ingrese el id del usuario para modificarle el rol: ")
-                self.__service.change_user_role(user_id, role)
+                user_email = input("Ingrese el email del usuario para modificarle el rol: ")
+                self.__service.change_user_role(user_email, role)
 
             elif option == "9":
                 if (self.current_user == None):

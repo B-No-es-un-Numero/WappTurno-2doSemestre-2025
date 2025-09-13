@@ -86,11 +86,11 @@ class UserService:
         return user
 
     #Solo para admin
-    def change_user_role(self, user_id: str, role: RoleEnum) -> bool:
-        searched_user = self.get_user_by_id(user_id)
+    def change_user_role(self, user_email: str, role: RoleEnum) -> bool:
+        searched_user = self.get_user_by_email(user_email)
         if searched_user is None:
             return False
-        self.__dao.change_user_role(user_id, role)
+        self.__dao.change_user_role(user_email, role)
         return True
 
     def disable_account(self, user_email: str,) -> 'User':
