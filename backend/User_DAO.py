@@ -36,7 +36,7 @@ class UserDAO:
         finally: self.__connection.close()
         return created_user
         
-    #TODO!!
+
     def get_user_by_id(self, user_id: str) -> User | None:
         try:
             self.open_connection()
@@ -65,7 +65,7 @@ class UserDAO:
             self.__connection.close()
         
     
-    def get_user_by_email(self, user_email: str) -> User | None:
+    def get_user_by_email(self, user_email: str, close: bool = True) -> User | None:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
@@ -89,6 +89,9 @@ class UserDAO:
             return None
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar por email: {error}")
+        finally:
+            if close:
+                self.__connection.close()
 
     def get_all_users(self) -> list['User']:
         try:
@@ -116,8 +119,9 @@ class UserDAO:
             return users
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar usuarios: {error}")
+        finally: self.__connection.close()
 
-    #TODO!!
+
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         try:
             self.open_connection()
@@ -173,29 +177,49 @@ class UserDAO:
             return users
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar doctores: {error}")
+        finally: self.__connection.close()
     
 
     def update_user(self, name: str, surname: str, dni: int,
-                    email: str, password: str, phone_number: int):
-        try:
-            self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query= ("UPDATE Users SET name = %s, surname = %s, email = %s, dni = %s,"
-                "password = %s, phone_number = %s WHERE email = %s")
-                cursor.execute(query, (name, surname, dni, email, password, phone_number, email))
-                self.__connection.commit()
-                return True
-        except mysql.connector.Error as error:
-            raise Exception(f"Error al insertar: {error}")
-        finally: self.__connection.close()
-        
-    
-    def change_user_role(self, user_id: str, role: RoleEnum) -> bool:
+                    email: str, password: str, phone_number: int) -> User | None:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Users SET role = %s WHERE user_id = %s")
-                cursor.execute(query, (role, user_id,))
+                query= ("UPDATE Users SET name = %s, surname = %s,  dni = %s,"
+                "password = %s, phone_number = %s WHERE email = %s")
+                cursor.execute(query, (name, surname, dni, password, phone_number, email))
+                self.__connection.commit()
+                if cursor.rowcount == 0:
+                    return None
+                
+                cursor.execute("SELECT * FROM Users WHERE email = %s", (email,))
+                row = cursor.fetchone()
+                if row:
+                    role_enum = RoleEnum(row["role"]) if "role" in row else None
+                    user = User(
+                        name=row["name"],
+                        surname=row["surname"],
+                        dni=row["dni"],
+                        email=row["email"],
+                        password=row["password"],
+                        phone_number=row["phone_number"],
+                        role=role_enum,
+                        date_of_birth=row["date_of_birth"]
+                    )
+                    user.enabled = row.get("enabled", True)
+                    return user
+            
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al insertar: {error}")
+        finally: self.__connection.close()
+    
+
+    def change_user_role(self, user_email: str, role: RoleEnum) -> bool:
+        try:
+            self.open_connection()
+            with self.__connection.cursor(dictionary=True) as cursor:
+                query= ("UPDATE Users SET role = %s WHERE email = %s")
+                cursor.execute(query, (role, user_email,))
                 self.__connection.commit()
                 return True
         except mysql.connector.Error as error:

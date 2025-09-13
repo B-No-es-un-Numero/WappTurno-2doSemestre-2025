@@ -13,7 +13,7 @@ class UserService:
             print("Error! No se permiten campos vacíos. \n")
             return None
 
-        already_exists = self.get_user_by_email(email)
+        already_exists = self.__dao.get_user_by_email(email, close=False)
         if already_exists:
             print("Error! Este usuario ya se encuentra registrado! Proceda a iniciar sesión. \n")
             return None
@@ -36,7 +36,7 @@ class UserService:
         return created_user
         
     def login(self, user_email: str, password: str) -> User:
-        data = self.get_user_by_email(user_email)
+        data = self.__dao.get_user_by_email(user_email, close=False)
         if data is None:
             return None
         if data.password == password:
@@ -69,6 +69,7 @@ class UserService:
         users = self.__dao.get_all_users_by_role(role)
         return users
 
+    #Solo para propio user
     def update_user(self, name: str, surname: str, dni: int, 
                        email: str, password: str, phone_number: int) -> 'User':
         
@@ -81,18 +82,19 @@ class UserService:
             "longitud de 6 caracteres mínimo e incluir letras y números. \n")
             return None
         
-        user = self.__dao.update_user(name, surname, dni, password, email, phone_number)
+        user = self.__dao.update_user(name, surname, dni, email, password, phone_number)
 
         return user
 
     #Solo para admin
-    def change_user_role(self, user_id: str, role: RoleEnum) -> bool:
-        searched_user = self.get_user_by_id(user_id)
+    def change_user_role(self, user_email: str, role: RoleEnum) -> bool:
+        searched_user = self.__dao.get_user_by_email(user_email, close=False)
         if searched_user is None:
             return False
-        self.__dao.change_user_role(user_id, role)
+        self.__dao.change_user_role(user_email, role)
         return True
 
+    #Solo para propio user
     def disable_account(self, user_email: str,) -> 'User':
         user = self.__dao.disable_account(user_email,)
         return user
