@@ -16,7 +16,7 @@ class Menu():
             "4. Ver listado de usuarios por rol (solo admin). \n5. Buscar usuario por id (solo admin). \n"
             "6. Buscar usuario por email (solo admin). \n"
             "7. Editar datos de usuario (solo propia cuenta). \n8. Cambiar rol de usuario (solo admin). \n"
-            "9. Dar de baja la cuenta (solo propia cuenta). \n10. Eliminar definitivamente la cuenta(solo admin). \n"
+            "9. Dar de baja la cuenta (solo propia cuenta). \n10. Eliminar definitivamente la cuenta (solo admin). \n"
             "0. Salir. \n")
             if option == "1":
                 name = input("Ingrese su nombre: ")
