@@ -35,6 +35,7 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 **Front end:**
 - **HTML5** → estructura del contenido.
 - **CSS3** → estilos y diseño responsivo.
+- **Boostrap** → utilización de componentes.
 - **JavaScript** → interacción y lógica en el navegador.
 
 **Back end:**
