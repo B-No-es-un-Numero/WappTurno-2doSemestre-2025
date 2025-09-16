@@ -45,9 +45,10 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 
 ## Consideraciones técnicas
 **Backend**
-- Se optó por un patrón arquitectónico DAO, a fin de separar claramente la lógica de negocio de la conexión y trabajo con la db.
-- Para el sprint 1, atendiendo a que solamente se trabajó con las funcionalidades del usuario, se sostuvo una modularización mínima (módulos User.py, User_service.py, User_DAO.py). Las carpetas necesarias (models, services, dao, etc), así como interfases y demás clases planteadas en los diagramas serán añadidas en posteriores sprint, de acuerdo a los requerimientos específicos del módulo de fullstack. 
+- Se optó por un patrón arquitectónico DAO, a fin de separar claramente la lógica de negocio de la conexión y trabajo con la db. Para el sprint 1, atendiendo a que *solamente* se trabajó con las funcionalidades del usuario, se sostuvo una modularización mínima (módulos User.py, User_service.py, User_DAO.py). Las carpetas necesarias (models, services, dao, etc), así como interfases y demás clases planteadas en los diagramas serán añadidas en posteriores sprints, de acuerdo a los requerimientos específicos del módulo de fullstack. 
+
 - Para facilitar el trabajo colectivo, cada desarrollador generó un entorno virtual en el cual se cargaron los requerimientos de packages con sus correspondientes versiones.
+
 - También se trabajó incorporando .env para evitar la exposición de información sensible sobre la base de datos, así como .gitignore, para no sobrecargar el proyecto con archivos innecesarios.
 
 - Se optó por mantener las ids como String (UUID), dado que se trata en su mayoría de información altamente sensible (Diagnósticos de pacientes, sus tratamientos, etc).
