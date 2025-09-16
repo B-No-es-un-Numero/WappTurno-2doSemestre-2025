@@ -35,6 +35,7 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 **Front end:**
 - **HTML5** → estructura del contenido.
 - **CSS3** → estilos y diseño responsivo.
+- **Boostrap** → utilización de componentes.
 - **JavaScript** → interacción y lógica en el navegador.
 
 **Back end:**
@@ -55,6 +56,19 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 - Tal como se planteó en los diagramas, se procedió a desarrollar eliminado lógico (no físico, sino como "enabled = False") para las entidades, a fin de conservar la integridad de los registros en la base de datos. Asimismo, dado el requerimiento técnico del módulo fullstack de incorporar la función "eliminar usuario" como únicamente accesible a administrador, en este caso también se desarrolló el eliminado *físico* de usuario. El eliminado *lógico* de usuario (dar de baja la cuenta) sigue vigente para el propio usuario aunque no sea administrador.
 
 - Para conservar la integridad de los registros en base de datos, evitar errores en el guardado de la información o fallas mayores, como dejar la conexión a la base de datos abierta, se pensaron los métodos get -llamados internamente para corroboraciones de otros métodos como register, login, updates...- con parámetros optativos, para definir cuándo la conexión debía mantenerse abierta momentáneamente, para cerrarse luego de que el método de orden superior arrojara el resultado.
+
+**Frontend**
+- Para ejecutar el proyecto de forma local, basta con abrir el archivo `index.html` en cualquier navegador moderno.
+
+- La carpeta `pages/` contiene todas las pantallas del proyecto, entre ellas:
+    - `index.html` → **Página principal (home)**
+    - `contact.html` → **Página de contacto**
+    - `services.html` → **Listado de servicios**
+    - `register.html` y `login.html` → **Pantallas de autenticación**
+    - `dashboard.html`, `profile.html`, `my-appointments.html`, `new-appointment.html` → **Páginas de usuario y gestión interna**
+- El sitio tiene un diseño **responsivo** y ordenado.  
+- Para facilitar la navegación, cada archivo `.html` está vinculado mediante un **menú superior** y enlaces internos.  
+- Los **estilos** y **scripts** se mantienen en archivos separados para garantizar una buena organización y facilitar futuras modificaciones.  
 
 
 ## Participantes:
