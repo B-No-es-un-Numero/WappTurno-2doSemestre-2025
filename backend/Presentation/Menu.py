@@ -1,5 +1,5 @@
-from User_service import UserService
-from Role_enum import RoleEnum
+from Services.User_service import UserService
+from Models.Role_enum import RoleEnum
 
 class Menu():
     
