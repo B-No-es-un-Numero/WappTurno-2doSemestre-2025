@@ -1,7 +1,7 @@
 from datetime import datetime
-from User import User
-from Role_enum import RoleEnum
-from User_DAO import UserDAO
+from Models.User import User
+from Models.Role_enum import RoleEnum
+from DAO.User_DAO import UserDAO
 
 class UserService:
     def __init__(self, dao: UserDAO):

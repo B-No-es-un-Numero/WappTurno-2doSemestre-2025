@@ -1,6 +1,6 @@
-from Role_enum import RoleEnum
-from User import User
-from connection_mysql import connection_mysql
+from Models.Role_enum import RoleEnum
+from Models.User import User
+from DAO.connection_mysql import connection_mysql
 import mysql.connector
 
 class UserDAO: 

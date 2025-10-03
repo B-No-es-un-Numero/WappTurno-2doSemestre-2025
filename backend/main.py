@@ -1,6 +1,6 @@
-from User_service import UserService
-from User_DAO import UserDAO
-from Menu import Menu
+from Services.User_service import UserService
+from DAO.User_DAO import UserDAO
+from Presentation.Menu import Menu
 
 def main():
     menu = Menu(UserService(UserDAO()))
