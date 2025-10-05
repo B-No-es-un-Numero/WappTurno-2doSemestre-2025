@@ -45,11 +45,16 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 
 ## Consideraciones técnicas
 **Backend**
-- Se optó por un patrón arquitectónico DAO, a fin de separar claramente la lógica de negocio de la conexión y trabajo con la db. Para el sprint 1, atendiendo a que *solamente* se trabajó con las funcionalidades del usuario, se sostuvo una modularización mínima (módulos User.py, User_service.py, User_DAO.py). Las carpetas necesarias (models, services, dao, etc), así como interfases y demás clases planteadas en los diagramas serán añadidas en posteriores sprints, de acuerdo a los requerimientos específicos del módulo de fullstack. 
+- Se optó por un patrón arquitectónico DAO, a fin de separar claramente la lógica de negocio de la conexión y trabajo con la db. 
+Para el sprint 1, atendiendo a que *solamente* se trabajó con las funcionalidades del usuario, se sostuvo una modularización mínima (módulos User.py, User_service.py, User_DAO.py). La misma modularización se mantuvo para las otras clases, sus métodos y conexión a base de datos.
+Para el sprint 2 (primer MVP), se realizó la división necesaria en carpetas (models, services, dao, etc) y la creación de las demás clases planteadas en los diagramas, puestos a punto específicamente para representar el estado final de este primer MVP.
 
 - Para facilitar el trabajo colectivo, cada desarrollador generó un entorno virtual en el cual se cargaron los requerimientos de packages con sus correspondientes versiones.
 
-- También se trabajó incorporando .env para evitar la exposición de información sensible sobre la base de datos, así como .gitignore, para no sobrecargar el proyecto con archivos innecesarios.
+- También se trabajó incorporando .env para evitar la exposición de información sensible sobre la base de datos, así como .gitignore, para no sobrecargar el proyecto con archivos innecesarios. Se agregó un .env template para que otros programadores ajenos al equipo de desarrollo pudieran ejecutar localmente con mayor facilidad el presente programa.
+
+- En el script de creación de las diversas tablas necesarias en la base de datos, se agregó al final una sentencia de poblamiento específica a Medical_consultations; estas son prácticas médicas registradas por código (hay varios a nivel nacional, para este proyecto se utilizó el de PAMI) para dar cuenta de las prácticas más comunes, lo cual reviste valor trabajando con Obras Sociales, equipos de salud y pacientes, tanto para mantener claridad como confidencialidad.
+Los códigos ingresados fueron una mínima parte (a modo de ejemplo). En iteraciones posteriores, sería necesario ingresar la totalidad de los mismos.
 
 - Se optó por mantener las ids como String (UUID), dado que se trata en su mayoría de información altamente sensible (Diagnósticos de pacientes, sus tratamientos, etc).
 
