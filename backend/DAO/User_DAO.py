@@ -1,3 +1,4 @@
+from Models import Doctor
 from Models.Role_enum import RoleEnum
 from Models.User import User
 from DAO.connection_mysql import connection_mysql
@@ -13,30 +14,53 @@ class UserDAO:
             pass
         self.__connection = connection_mysql().create_connection()
 
+
     def register_user(self, created_user: User):
         try:
             self.open_connection()
             with self.__connection.cursor() as cursor:
-                query= ("INSERT INTO Users (user_id, name, surname, "
-                    "dni, email, password, phone_number, role, date_of_birth, enabled) "
-                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-                cursor.execute(query, (created_user.user_id, 
-                                       created_user.name, 
-                                       created_user.surname,
-                                       created_user.dni,
-                                       created_user.email,
-                                       created_user.password,
-                                       created_user.phone_number,
-                                       created_user.role,
-                                       created_user.date_of_birth,
-                                       created_user.enabled))
-                self.__connection.commit()
+                query_user = (
+                "INSERT INTO Users (id, name, surname, dni, email, password, phone_number, role, date_of_birth, enabled) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                )
+                cursor.execute(
+                query_user,
+                (
+                    created_user.user_id,
+                    created_user.name,
+                    created_user.surname,
+                    created_user.dni,
+                    created_user.email,
+                    created_user.password,
+                    created_user.phone_number,
+                    created_user.role.name,
+                    #if hasattr(created_user.role, "name") else created_user.role,
+                    created_user.date_of_birth,
+                    created_user.enabled,
+                ),
+            )   
+                if (created_user.role.name == "DOCTOR"):
+                    query_doctor = (
+                        "INSERT INTO Doctors (user_id, specialty, accepts_medical_insurance, license_number) "
+                        "VALUES (%s, %s, %s, %s)"
+                    )
+                cursor.execute(
+                    query_doctor,
+                    (
+                        created_user.user_id,
+                        created_user.specialty,
+                        created_user.accepts_medical_ensurance,
+                        created_user.license_number,
+                    ),
+                )   
+            self.__connection.commit()  
         except mysql.connector.Error as error:
-            raise Exception(f"Error al insertar: {error}")
-        finally: self.__connection.close()
+            self.__connection.rollback()
+            raise Exception(f"Error al insertar en la base de datos: {error}") 
+        finally:        
+            self.__connection.close()  
         return created_user
         
-
     def get_user_by_id(self, user_id: str) -> User | None:
         try:
             self.open_connection()
@@ -63,8 +87,7 @@ class UserDAO:
             raise Exception(f"Error al buscar usuario por ID: {error}")
         finally:
             self.__connection.close()
-        
-    
+
     def get_user_by_email(self, user_email: str, close: bool = True) -> User | None:
         try:
             self.open_connection()
@@ -84,6 +107,7 @@ class UserDAO:
                         role=role_enum,
                         date_of_birth=row["date_of_birth"]
                     )
+                    user.user_id = row.get("id")
                     user.enabled = row.get("enabled", True)
                     return user
             return None
@@ -120,7 +144,6 @@ class UserDAO:
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar usuarios: {error}")
         finally: self.__connection.close()
-
 
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         try:

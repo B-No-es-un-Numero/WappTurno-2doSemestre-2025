@@ -1,9 +1,13 @@
 from enum import StrEnum
 
-class RoleEnum(StrEnum):
-    ADMIN = "ADMIN"
-    PATIENT = "PATIENT"
-    DOCTOR = "DOCTOR"
+class DaysEnum(StrEnum):
+    LUNES = "LUNES"
+    MARTES = "MARTES"
+    MIERCOLES = "MIERCOLES"
+    JUEVES = "JUEVES"
+    VIERNES = "VIERNES"
+    SABADO = "SABADO"
+    DOMINGO = "DOMINGO"
 
     @classmethod
     def values(self):

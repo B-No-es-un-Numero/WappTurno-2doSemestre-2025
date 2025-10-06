@@ -1,9 +1,9 @@
 from enum import StrEnum
 
-class RoleEnum(StrEnum):
-    ADMIN = "ADMIN"
-    PATIENT = "PATIENT"
-    DOCTOR = "DOCTOR"
+class TimeFrameEnum(StrEnum):
+    MAÑANA = "MAÑANA"
+    TARDE = "TARDE"
+    NOCHE = "NOCHE"
 
     @classmethod
     def values(self):
