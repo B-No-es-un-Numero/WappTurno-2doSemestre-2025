@@ -1,4 +1,5 @@
 from datetime import datetime
+from Models.Doctor import Doctor
 from Models.User import User
 from Models.Role_enum import RoleEnum
 from DAO.User_DAO import UserDAO
@@ -7,29 +8,57 @@ class UserService:
     def __init__(self, dao: UserDAO):
         self.__dao = dao
 
-    def register(self, name: str, surname: str, dni: int, email: str,
-                 password: str, phone_number: int, role: RoleEnum, date_of_birth: str) -> User:
+    def register( self, name: str, surname: str, dni: int, email: str, password: str,
+        phone_number: int, role: RoleEnum, date_of_birth: str, specialty: str = None,
+        accepts_medical_ensurance: bool = None, license_number: int = None
+    ) -> User:
         if not all([name, surname, dni, email, password, phone_number, date_of_birth]):
-            print("Error! No se permiten campos vacíos. \n")
+            print("Error! No se permiten campos vacíos.\n")
             return None
 
         already_exists = self.__dao.get_user_by_email(email, close=False)
         if already_exists:
-            print("Error! Este usuario ya se encuentra registrado! Proceda a iniciar sesión. \n")
+            print("Error! Este usuario ya se encuentra registrado. Proceda a iniciar sesión.\n")
             return None
 
         if len(password) < 6 or not any(c.isalpha() for c in password) or not any(c.isdigit() for c in password):
-            print("Contraseña inválida. Recuerde que debe tener" \
-            " longitud de 6 caracteres mínimo e incluir letras y números. \n")
+            print("Contraseña inválida. Debe tener al menos 6 caracteres e incluir letras y números.\n")
             return None
 
         try:
-            date_of_birth_formatted = datetime.strptime(date_of_birth, "%d-%m-%Y")
+            date_of_birth_formatted = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
         except ValueError:
-            print("Fecha inválida. Use el formato DD-MM-AAAA.\n")
+            print("Fecha inválida. Use el formato YYYY-MM-DD.\n")
             return None
-        
-        created_user = User(name, surname, dni, email, password, phone_number, role, date_of_birth_formatted)
+
+        if role == RoleEnum.DOCTOR:
+            if not all([specialty is not None, license_number is not None, accepts_medical_ensurance is not None]):
+                print("Faltan datos obligatorios para registrar un profesional de salud.\n")
+                return None
+
+            created_user = Doctor(
+                name=name,
+                surname=surname,
+                dni=dni,
+                email=email,
+                password=password,
+                phone_number=phone_number,
+                date_of_birth=date_of_birth_formatted,
+                specialty=specialty,
+                accepts_medical_ensurance=accepts_medical_ensurance,
+                license_number=license_number
+            )
+        else:
+            created_user = User(
+                name=name,
+                surname=surname,
+                dni=dni,
+                email=email,
+                password=password,
+                phone_number=phone_number,
+                role=role,
+                date_of_birth=date_of_birth_formatted
+            )
 
         self.__dao.register_user(created_user)
 
