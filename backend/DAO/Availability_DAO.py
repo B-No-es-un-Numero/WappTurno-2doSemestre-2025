@@ -1,6 +1,8 @@
 from DAO.connection_mysql import connection_mysql
 import mysql.connector
 from Models.Availability import Availability
+from Models.Days_enum import DaysEnum
+from Models.TimeFrame_enum import TimeFrameEnum
 
 class AvailabilityDAO: 
 
@@ -51,23 +53,18 @@ class AvailabilityDAO:
             raise Exception(f"Error al eliminar el horario: {error}")
         finally: self.__connection.close()
 
-    '''
-    def update(self, availability_id: str, time_frame:, days) -> bool:    
+
+    def update(self, availability_id: str, time_frame: TimeFrameEnum, days: DaysEnum) -> bool:    
         try:
             self.open_connection()
             with self.__connection.cursor() as cursor:
                 query_availability = (
-                "INSERT INTO Availability (id, doctor_id, time_frame, days) "
-                "VALUES (%s, %s, %s, %s)"
+                "UPDATE Availability SET time_frame=%s, days=%s "
+                "WHERE id=%s"
                 )
                 cursor.execute(
                 query_availability,
-                (
-                    new_availability.id,
-                    new_availability.doctor_id,
-                    new_availability.time_frame,
-                    new_availability.days
-                ),
+                (time_frame,days,availability_id,),
             )    
             self.__connection.commit()  
         except mysql.connector.Error as error:
@@ -75,8 +72,8 @@ class AvailabilityDAO:
             raise Exception(f"Error al insertar en la base de datos: {error}") 
         finally:        
             self.__connection.close()  
-        return new_availability
-    '''
+        return True
+
 
     def get_all_by_doctor_id(self, doctor_id: str) -> list['Availability']:
         try:
@@ -87,37 +84,40 @@ class AvailabilityDAO:
                 rows = cursor.fetchall()
                 data_list = []
                 for row in rows:
-                    doctor = doctor_id(row["doctor_id"]) if "doctor_id" in row else None
-                    availability = Availability(
-                        id=row["id"],
+                    availability = Availability(         
                         doctor_id=row["doctor_id"],
                         time_frame=row["time_frame"],
                         days=row["days"]
                     )
+                    availability.id = row["id"]
                     data_list.append(availability)
             return data_list
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar horarios por doctor: {error}")
         finally:
             self.__connection.close()
-
+    
         
-    def get_by_id(self, availability_id: str) -> Availability:
+    def get_availability_by_id(self, availability_id: str) -> Availability:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query = "SELECT * FROM Availability WHERE availability_id = %s"
+                query = "SELECT * FROM Availability WHERE id = %s"
                 cursor.execute(query, (availability_id,))
-                rows = cursor.fetchone()
-                for row in rows:
+                row = cursor.fetchone()
+                if row:
                     availability = Availability(
-                        id=row["id"],
                         doctor_id=row["doctor_id"],
                         time_frame=row["time_frame"],
                         days=row["days"]
                     )
-            return availability
+                    availability.id = row["id"]
+                    return availability
+                else:
+                    return None
+
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar horarios por id: {error}")
+
         finally:
             self.__connection.close()

@@ -66,7 +66,7 @@ class UserDAO:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query = "SELECT * FROM Users WHERE user_id = %s AND enabled = TRUE"
+                query = "SELECT * FROM Users WHERE id = %s AND enabled = TRUE"
                 cursor.execute(query, (user_id,))
                 row = cursor.fetchone()
                 if row:
@@ -285,35 +285,35 @@ class UserDAO:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Doctor SET specialty = %s, accepts_medical_insurence = %s,"
-                "license_number = %s WHERE doctor_id = %s")
+                query= ("UPDATE Doctors SET specialty = %s, accepts_medical_insurance = %s,"
+                "license_number = %s WHERE user_id = %s")
                 cursor.execute(query, (specialty, accepts_medical_insurence,
                                        license_number, doctor_id))
                 self.__connection.commit()
                 if cursor.rowcount == 0:
                     return None
-        except: pass
 
-                #JOIN??
-                '''
-                cursor.execute("SELECT * FROM Users WHERE email = %s", (email,))
+                cursor.execute("SELECT * FROM Users " \
+                "JOIN Doctors ON Users.id = Doctors.user_id " \
+                "WHERE id = %s", (doctor_id,))
                 row = cursor.fetchone()
                 if row:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
+                    doctor = Doctor(
                         name=row["name"],
                         surname=row["surname"],
                         dni=row["dni"],
                         email=row["email"],
                         password=row["password"],
                         phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
+                        date_of_birth=row["date_of_birth"],
+                        specialty=row["specialty"],
+                        accepts_medical_ensurance=row["accepts_medical_insurance"],
+                        license_number=row["license_number"],
                     )
-                    user.enabled = row.get("enabled", True)
-                    return user
+                    doctor.enabled = row["enabled"]
+                    doctor.user_id = row["user_id"]
+                    return doctor
             
         except mysql.connector.Error as error:
             raise Exception(f"Error al insertar: {error}")
         finally: self.__connection.close()
-        '''

@@ -13,7 +13,7 @@ class Doctor(User):
         phone_number: int,
         date_of_birth: date,
         specialty: str,
-        accepts_medical_ensurance: bool,
+        accepts_medical_insurance: bool,
         license_number: int
     ):
         super().__init__(
@@ -27,7 +27,7 @@ class Doctor(User):
             date_of_birth=date_of_birth
         )
         self.specialty = specialty
-        self.accepts_medical_ensurance = accepts_medical_ensurance
+        self.accepts_medical_insurance = accepts_medical_insurance
         self.license_number = license_number
 
     def __str__(self):
@@ -39,7 +39,7 @@ class Doctor(User):
         return (f"Doctor(name={self.name!r}, surname={self.surname!r}, "
                 f"dni={self.dni!r}, email={self.email!r}, "
                 f"specialty={self.specialty!r}, "
-                f"accepts_medical_ensurance={self.accepts_medical_ensurance!r}, "
+                f"accepts_medical_insurance={self.accepts_medical_insurance!r}, "
                 f"license_number={self.license_number!r})")
 
     def get_specialty(self):
@@ -48,11 +48,11 @@ class Doctor(User):
     def set_specialty(self, specialty: str):
         self.specialty = specialty
 
-    def get_accepts_medical_ensurance(self):
-        return self.accepts_medical_ensurance
+    def get_accepts_medical_insurance(self):
+        return self.accepts_medical_insurance
 
-    def set_accepts_medical_ensurance(self, accepts_medical_ensurance: bool):
-        self.accepts_medical_ensurance = accepts_medical_ensurance
+    def set_accepts_medical_insurance(self, accepts_medical_insurance: bool):
+        self.accepts_medical_insurance = accepts_medical_insurance
 
     def get_license_number(self):
         return self.license_number

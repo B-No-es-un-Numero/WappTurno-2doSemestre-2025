@@ -299,8 +299,13 @@ class Menu():
                 if (self.current_user.role != RoleEnum.DOCTOR):
                     print("Error, acción solo accesible para doctor! \n")
                     continue
-                # Mostrar turnos.
-                availability_id = print("Ingrese el id del horario que desea borrar. \n")
+                availability_list = self.__availability_service.get_all_by_doctor_id(
+                                                            self.current_user.user_id)
+                if not availability_list:
+                    print("No se encuentran horarios para el profesional. \n")
+                else:
+                    print(f"Lista de horarios: {availability_list} \n")
+                availability_id = input("Ingrese el id del horario que desea borrar. \n")
                 deleted_timeframe = self.__availability_service.remove_availability(
                     availability_id)
                 if (deleted_timeframe): 
@@ -316,8 +321,13 @@ class Menu():
                 if (self.current_user.role != RoleEnum.DOCTOR):
                     print("Error, acción solo accesible para doctor! \n")
                     continue
-                # Mostrar turnos.
-                availability_id = print("Ingrese el id del horario que desea editar. \n")
+                availability_list = self.__availability_service.get_all_by_doctor_id(
+                                                            self.current_user.user_id)
+                if not availability_list:
+                    print("No se encuentran horarios para el profesional. \n")
+                else:
+                    print(f"Lista de horarios: {availability_list} \n")
+                availability_id = input("Ingrese el id del horario que desea editar. \n")
                 timeframe = None
                 while (timeframe == None):
                     input_timeframe = input("Ingrese numero de acuerdo al horario, uno por vez. 1. MAÑANA. 2. TARDE. 3. NOCHE.: ")
