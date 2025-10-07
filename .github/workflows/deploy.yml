@@ -1,5 +1,6 @@
 name: Deploy HTML/CSS/JS to GitHub Pages
 
+# Se ejecuta en cada push a main
 on:
   push:
     branches:
@@ -19,7 +20,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy to GitHub Pages
-        uses: actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: ./
