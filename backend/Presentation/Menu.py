@@ -21,8 +21,11 @@ class Menu():
             "6. Buscar usuario por email (solo admin). \n"
             "7. Editar datos de usuario (solo propia cuenta). \n8. Cambiar rol de usuario (solo admin). \n"
             "9. Dar de baja la cuenta (solo propia cuenta). \n10. Eliminar definitivamente la cuenta (solo admin). \n"
-            "11. Crear horario disponibilidad (solo profesional médico). \n" 
-            "12. Eliminar horario disponibilidad (solo profesional médico). \n"
+            "11. Crear un horario disponibilidad (solo profesional médico). \n" 
+            "12. Eliminar un horario disponibilidad (solo profesional médico). \n"
+            "13. Editar tus horarios disponibilidad (solo profesional médico). \n"
+            "14. Mostrar tus horario disponibilidad (solo profesional médico). \n"
+            "15. Editar datos del profesional (solo profesional médico). \n"
             "0. Salir. \n")
 
             if option == "1":
@@ -287,6 +290,120 @@ class Menu():
                     print("La disponibilidad se creó exitosamente. \n")
                 else:
                     print("No se pudo elcrear la disponibilidad.")
+
+            #Solo doctor (Fullstack requirement for sprint 2)
+            elif option == "12":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
+                if (self.current_user.role != RoleEnum.DOCTOR):
+                    print("Error, acción solo accesible para doctor! \n")
+                    continue
+                availability_list = self.__availability_service.get_all_by_doctor_id(
+                                                            self.current_user.user_id)
+                if not availability_list:
+                    print("No se encuentran horarios para el profesional. \n")
+                else:
+                    print(f"Lista de horarios: {availability_list} \n")
+                availability_id = input("Ingrese el id del horario que desea borrar. \n")
+                deleted_timeframe = self.__availability_service.remove_availability(
+                    availability_id)
+                if (deleted_timeframe): 
+                    print("El horario ha sido eliminado exitosamente. \n")
+                else: 
+                    print("No se pudo eliminar el horario. Confirme el id del mismo. \n")
+            
+            #Solo doctor (Fullstack requirement for sprint 2)
+            elif option == "13":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
+                if (self.current_user.role != RoleEnum.DOCTOR):
+                    print("Error, acción solo accesible para doctor! \n")
+                    continue
+                availability_list = self.__availability_service.get_all_by_doctor_id(
+                                                            self.current_user.user_id)
+                if not availability_list:
+                    print("No se encuentran horarios para el profesional. \n")
+                else:
+                    print(f"Lista de horarios: {availability_list} \n")
+                availability_id = input("Ingrese el id del horario que desea editar. \n")
+                timeframe = None
+                while (timeframe == None):
+                    input_timeframe = input("Ingrese numero de acuerdo al horario, uno por vez. 1. MAÑANA. 2. TARDE. 3. NOCHE.: ")
+                    if input_timeframe == "1":
+                        timeframe = TimeFrameEnum.MAÑANA
+                    elif input_timeframe == "2":
+                        timeframe = TimeFrameEnum.TARDE
+                    elif input_timeframe == "3":
+                        timeframe = TimeFrameEnum.NOCHE
+                    else:
+                        print("Horario no reconocido. Ingrese un horario válido.\n")
+                        continue
+                days = None
+                while (days == None):
+                    input_days = input("Ingrese numero de acuerdo al día, uno por vez. " \
+                "1. LUNES. 2. MARTES. 3. MIERCOLES. 4. JUEVES. 5. VIERNES. 6. SABADO. 7. DOMINGO.: ")
+                    if input_days == "1":
+                        days = DaysEnum.LUNES
+                    elif input_days == "2":
+                        days = DaysEnum.MARTES
+                    elif input_days == "3":
+                        days = DaysEnum.MIERCOLES
+                    elif input_days == "4":
+                        days = DaysEnum.JUEVES
+                    elif input_days == "5":
+                        days = DaysEnum.VIERNES
+                    elif input_days == "6":
+                        days = DaysEnum.SABADO
+                    elif input_days == "7":
+                        days = DaysEnum.DOMINGO
+                    else:
+                        print("Día no reconocido. Ingrese un día válido.\n")
+                        continue
+
+                updated_timeframe = self.__availability_service.update_availability(
+                    availability_id, timeframe, days)
+                if (updated_timeframe):
+                    print("El horario se editó exitosamente. \n")
+                else:
+                    print("No se pudo editar el horario.")
+
+            #Solo doctor (Fullstack requirement for sprint 2)
+            elif option == "14":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
+                if (self.current_user.role != RoleEnum.DOCTOR):
+                    print("Error, acción solo accesible para doctor! \n")
+                    continue
+                availability_list = self.__availability_service.get_all_by_doctor_id(
+                                                        self.current_user.user_id)
+                if not availability_list:
+                    print("No se encuentran horarios para el profesional. \n")
+                else:
+                    print(f"Lista de horarios: {availability_list} \n")
+             
+            #Solo doctor (Fullstack requirement for sprint 2)
+            elif option == "15":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
+                if (self.current_user.role != RoleEnum.DOCTOR):
+                    print("Error, acción solo accesible para doctor! \n")
+                    continue
+                specialty = input("Ingrese su especialidad médica: ")
+                license_number = int(input("Ingrese su número de matrícula: "))
+                accepts_input = input("¿Acepta obra social? (s/n): ").lower()
+                accepts_medical_ensurance = accepts_input == "s"
+
+                self.__user_service.update_doctor_profile(
+                    doctor_id = self.current_user.user_id,
+                    specialty = specialty,
+                    accepts_medical_ensurance = accepts_medical_ensurance,
+                    license_number = license_number
+                )
+                print("Datos profesionales editados exitosamente.\n")
 
             elif option == "0":
                 print("Saliendo de WappTurno...\n ")
