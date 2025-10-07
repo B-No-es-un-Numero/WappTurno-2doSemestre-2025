@@ -19,7 +19,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy to GitHub Pages
-        uses: actions-gh-pages@v4
+        uses: actions-gh-pages@v3
         with:
           branch: gh-pages
           folder: ./
