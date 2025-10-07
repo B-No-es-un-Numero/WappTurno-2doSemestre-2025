@@ -132,3 +132,14 @@ class UserService:
     def delete_account(self, user_email: str,) -> 'User':
         user = self.__dao.delete_account(user_email,)
         return user
+
+    #Solo para doctor
+    def update_doctor_profile(self, doctor_id: str, specialty: str,
+        accepts_medical_ensurance: bool, license_number: int) -> Doctor:
+        doctor = self.__dao.get_user_by_id(doctor_id)
+        if doctor is None:
+            print("No se encontró el usuario buscado. \n")
+            return None
+        else:
+            return self.__dao.update_doctor(doctor_id, specialty, accepts_medical_ensurance,
+                                     license_number)
