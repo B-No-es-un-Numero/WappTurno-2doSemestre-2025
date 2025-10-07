@@ -19,9 +19,9 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: actions-gh-pages@v4
         with:
-          personal_token: ${{ secrets.GH_PAT }} 
-          publish_dir: ./
-          force_orphan: true
-          keep_files: false
+          branch: gh-pages
+          folder: ./
+          token: ${{ secrets.GH_PAT }}
+          clean: true
