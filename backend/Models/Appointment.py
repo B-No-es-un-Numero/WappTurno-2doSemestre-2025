@@ -1,5 +1,5 @@
 from datetime import datetime
-from Appointment_state_enum import AppointmentStateEnum
+from Models.Appointment_state_enum import AppointmentStateEnum
 import uuid
 
 class Appointment:
