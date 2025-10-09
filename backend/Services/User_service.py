@@ -6,17 +6,17 @@ from DAO.User_DAO import UserDAO
 
 class UserService:
     def __init__(self, dao: UserDAO):
-        self.__dao = dao
+        self._dao = dao
 
     def register( self, name: str, surname: str, dni: int, email: str, password: str,
         phone_number: int, role: RoleEnum, date_of_birth: str, specialty: str = None,
-        accepts_medical_ensurance: bool = None, license_number: int = None
+        accepts_medical_insurance: bool = None, license_number: int = None
     ) -> User:
         if not all([name, surname, dni, email, password, phone_number, date_of_birth]):
             print("Error! No se permiten campos vacíos.\n")
             return None
 
-        already_exists = self.__dao.get_user_by_email(email, close=False)
+        already_exists = self._dao.get_user_by_email(email, close=False)
         if already_exists:
             print("Error! Este usuario ya se encuentra registrado. Proceda a iniciar sesión.\n")
             return None
@@ -32,7 +32,7 @@ class UserService:
             return None
 
         if role == RoleEnum.DOCTOR:
-            if not all([specialty is not None, license_number is not None, accepts_medical_ensurance is not None]):
+            if not all([specialty is not None, license_number is not None, accepts_medical_insurance is not None]):
                 print("Faltan datos obligatorios para registrar un profesional de salud.\n")
                 return None
 
@@ -45,7 +45,7 @@ class UserService:
                 phone_number=phone_number,
                 date_of_birth=date_of_birth_formatted,
                 specialty=specialty,
-                accepts_medical_ensurance=accepts_medical_ensurance,
+                accepts_medical_insurance=accepts_medical_insurance,
                 license_number=license_number
             )
         else:
@@ -60,12 +60,12 @@ class UserService:
                 date_of_birth=date_of_birth_formatted
             )
 
-        self.__dao.register_user(created_user)
+        self._dao.register_user(created_user)
 
         return created_user
         
     def login(self, user_email: str, password: str) -> User:
-        data = self.__dao.get_user_by_email(user_email, close=False)
+        data = self._dao.get_user_by_email(user_email, close=False)
         if data is None:
             return None
         if data.password == password:
@@ -76,26 +76,26 @@ class UserService:
             return None
 
     def get_user_by_id(self, user_id: str) -> 'User':
-        user = self.__dao.get_user_by_id(user_id)
+        user = self._dao.get_user_by_id(user_id)
         if user is None:
             print("No se encontró el usuario buscado. \n")
             return None
         return user
 
     def get_user_by_email(self, user_email: str) -> 'User':
-        user = self.__dao.get_user_by_email(user_email)
+        user = self._dao.get_user_by_email(user_email)
         if user is None:
             return None
         return user
     
     #Solo para admin
     def get_all_users(self) -> list['User']:
-        users = self.__dao.get_all_users()
+        users = self._dao.get_all_users()
         return users
    
    #Solo para admin
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
-        users = self.__dao.get_all_users_by_role(role)
+        users = self._dao.get_all_users_by_role(role)
         return users
 
     #Solo para propio user
@@ -111,35 +111,35 @@ class UserService:
             "longitud de 6 caracteres mínimo e incluir letras y números. \n")
             return None
         
-        user = self.__dao.update_user(name, surname, dni, email, password, phone_number)
+        user = self._dao.update_user(name, surname, dni, email, password, phone_number)
 
         return user
 
     #Solo para admin
     def change_user_role(self, user_email: str, role: RoleEnum) -> bool:
-        searched_user = self.__dao.get_user_by_email(user_email, close=False)
+        searched_user = self._dao.get_user_by_email(user_email, close=False)
         if searched_user is None:
             return False
-        self.__dao.change_user_role(user_email, role)
+        self._dao.change_user_role(user_email, role)
         return True
 
     #Solo para propio user
     def disable_account(self, user_email: str,) -> 'User':
-        user = self.__dao.disable_account(user_email,)
+        user = self._dao.disable_account(user_email,)
         return user
     
     #Solo para admin
     def delete_account(self, user_email: str,) -> 'User':
-        user = self.__dao.delete_account(user_email,)
+        user = self._dao.delete_account(user_email,)
         return user
 
     #Solo para doctor
     def update_doctor_profile(self, doctor_id: str, specialty: str,
-        accepts_medical_ensurance: bool, license_number: int) -> Doctor:
-        doctor = self.__dao.get_user_by_id(doctor_id)
+        accepts_medical_insurance: bool, license_number: int) -> Doctor:
+        doctor = self._dao.get_user_by_id(doctor_id)
         if doctor is None:
             print("No se encontró el usuario buscado. \n")
             return None
         else:
-            return self.__dao.update_doctor(doctor_id, specialty, accepts_medical_ensurance,
+            return self._dao.update_doctor(doctor_id, specialty, accepts_medical_insurance,
                                      license_number)
