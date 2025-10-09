@@ -34,7 +34,6 @@ class UserDAO:
                     created_user.password,
                     created_user.phone_number,
                     created_user.role.name,
-                    #if hasattr(created_user.role, "name") else created_user.role,
                     created_user.date_of_birth,
                     created_user.enabled,
                 ),
@@ -49,7 +48,7 @@ class UserDAO:
                     (
                         created_user.user_id,
                         created_user.specialty,
-                        created_user.accepts_medical_ensurance,
+                        created_user.accepts_medical_insurance,
                         created_user.license_number,
                     ),
                 )   
@@ -307,7 +306,7 @@ class UserDAO:
                         phone_number=row["phone_number"],
                         date_of_birth=row["date_of_birth"],
                         specialty=row["specialty"],
-                        accepts_medical_ensurance=row["accepts_medical_insurance"],
+                        accepts_medical_insurance=row["accepts_medical_insurance"],
                         license_number=row["license_number"],
                     )
                     doctor.enabled = row["enabled"]

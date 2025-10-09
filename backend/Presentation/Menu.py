@@ -1,14 +1,17 @@
 from Services.User_service import UserService
 from Services.Availability_service import AvailabilityService
+from Services.Appointment_service import AppointmentService
 from Models.Role_enum import RoleEnum
 from Models.Days_enum import DaysEnum
 from Models.TimeFrame_enum import TimeFrameEnum
 
 class Menu():
     
-    def __init__(self, user_service: UserService, availability_service: AvailabilityService):
-            self.__user_service = user_service
-            self.__availability_service = availability_service
+    def __init__(self, user_service: UserService, availability_service: AvailabilityService,
+                 appointment_service: AppointmentService):
+            self._user_service = user_service
+            self._availability_service = availability_service
+            self._appointment_service = appointment_service
             self.current_user = None
 
     def run_menu(self):
@@ -26,6 +29,7 @@ class Menu():
             "13. Editar tus horarios disponibilidad (solo profesional médico). \n"
             "14. Mostrar tus horario disponibilidad (solo profesional médico). \n"
             "15. Editar datos del profesional (solo profesional médico). \n"
+            "16. Mostrar todos los turnos del usuario. \n"
             "0. Salir. \n")
 
             if option == "1":
@@ -57,15 +61,15 @@ class Menu():
                 
                 specialty = None
                 license_number = None
-                accepts_medical_ensurance = None
+                accepts_medical_insurance = None
 
                 if role == RoleEnum.DOCTOR:
                     specialty = input("Ingrese su especialidad médica: ")
                     license_number = int(input("Ingrese su número de matrícula: "))
                     accepts_input = input("¿Acepta obra social? (s/n): ").lower()
-                    accepts_medical_ensurance = accepts_input == "s"
+                    accepts_medical_insurance = accepts_input == "s"
 
-                self.__user_service.register(
+                self._user_service.register(
                     name=name,
                     surname=surname,
                     dni=dni,
@@ -75,7 +79,7 @@ class Menu():
                     role=role,
                     date_of_birth=date_of_birth,
                     specialty=specialty,
-                    accepts_medical_ensurance=accepts_medical_ensurance,
+                    accepts_medical_insurance=accepts_medical_insurance,
                     license_number=license_number
                 )
 
@@ -85,7 +89,7 @@ class Menu():
             elif option == "2":
                 email = input("Ingrese su email: ")
                 password = input("Ingrese su contraseña: ")
-                self.current_user = self.__user_service.login(email, password)
+                self.current_user = self._user_service.login(email, password)
 
             #Solo admin (Fullstack requirement)
             elif option == "3":
@@ -95,7 +99,7 @@ class Menu():
                 if (self.current_user.role != RoleEnum.ADMIN):
                     print("Error, acción solo accesible para admin! \n")
                     continue
-                users = self.__user_service.get_all_users()
+                users = self._user_service.get_all_users()
                 if not users:
                     print("No se encuentran usuarios activos en sistema! \n")
                 else:
@@ -124,7 +128,7 @@ class Menu():
                     else:
                         print("Rol no reconocido. Ingrese un rol válido.\n")
                         continue
-                data = self.__user_service.get_all_users_by_role(role)
+                data = self._user_service.get_all_users_by_role(role)
                 if not data:
                     print("No se encuentran usuarios que cumplan la condición buscada. \n")
                 else:
@@ -140,7 +144,7 @@ class Menu():
                     print("Error, acción solo accesible para admin! \n")
                     continue
                 id = input("Ingrese el id del usuario que desea buscar.")
-                user_found = self.__user_service.get_user_by_id(id)
+                user_found = self._user_service.get_user_by_id(id)
                 if (user_found == None):
                     print("No se encontró el usuario buscado.")
                 else:
@@ -155,7 +159,7 @@ class Menu():
                     print("Error, acción solo accesible para admin! \n")
                     continue
                 email = input("Ingrese el email del usuario que desea buscar: ")
-                user_found = self.__user_service.get_user_by_email(email)
+                user_found = self._user_service.get_user_by_email(email)
                 if (user_found == None):
                     print("No se encontró el usuario buscado.")
                 else:
@@ -181,7 +185,7 @@ class Menu():
                     if (password != repeat_password):
                         print("Las contraseñas no coinciden. Por favor, vuelva a intentarlo. \n")
                         continue
-                    updated_user = self.__user_service.update_user(name=name, surname=surname, dni=dni, 
+                    updated_user = self._user_service.update_user(name=name, surname=surname, dni=dni, 
                                                 email=input_email, phone_number=phone_number, password=password)
                     if (updated_user):
                         print(f"Usuario modificado exitosamente! \n") 
@@ -207,7 +211,7 @@ class Menu():
                         print("Rol no reconocido. Ingrese un rol válido.\n")
                         continue
                 user_email = input("Ingrese el email del usuario para modificarle el rol: ")
-                self.__user_service.change_user_role(user_email, role)
+                self._user_service.change_user_role(user_email, role)
 
             elif option == "9":
                 if (self.current_user == None):
@@ -218,7 +222,7 @@ class Menu():
                 if self.current_user.email != input_email:
                     print("El email solicitado no coincide con el de la cuenta activa. \n")
                 else:
-                    disabled_user = self.__user_service.disable_account(input_email)
+                    disabled_user = self._user_service.disable_account(input_email)
                     if (disabled_user):
                         self.current_user = None
                         print("La cuenta se dio de baja exitosamente. Presione 0 para salir "
@@ -236,7 +240,7 @@ class Menu():
                     continue
                 input_email = input("Ingrese la dirección de " \
                 "email para eliminar definitivamente la cuenta: ")
-                deleted_user = self.__user_service.delete_account(input_email)
+                deleted_user = self._user_service.delete_account(input_email)
                 if (deleted_user):
                     print("La cuenta se eliminó exitosamente. \n")
                 else:
@@ -284,7 +288,7 @@ class Menu():
                         print("Día no reconocido. Ingrese un día válido.\n")
                         continue
 
-                new_timeframe = self.__availability_service.add_availability(
+                new_timeframe = self._availability_service.add_availability(
                     self.current_user.user_id, timeframe, days)
                 if (new_timeframe):
                     print("La disponibilidad se creó exitosamente. \n")
@@ -299,14 +303,14 @@ class Menu():
                 if (self.current_user.role != RoleEnum.DOCTOR):
                     print("Error, acción solo accesible para doctor! \n")
                     continue
-                availability_list = self.__availability_service.get_all_by_doctor_id(
+                availability_list = self._availability_service.get_all_by_doctor_id(
                                                             self.current_user.user_id)
                 if not availability_list:
                     print("No se encuentran horarios para el profesional. \n")
                 else:
                     print(f"Lista de horarios: {availability_list} \n")
                 availability_id = input("Ingrese el id del horario que desea borrar. \n")
-                deleted_timeframe = self.__availability_service.remove_availability(
+                deleted_timeframe = self._availability_service.remove_availability(
                     availability_id)
                 if (deleted_timeframe): 
                     print("El horario ha sido eliminado exitosamente. \n")
@@ -321,7 +325,7 @@ class Menu():
                 if (self.current_user.role != RoleEnum.DOCTOR):
                     print("Error, acción solo accesible para doctor! \n")
                     continue
-                availability_list = self.__availability_service.get_all_by_doctor_id(
+                availability_list = self._availability_service.get_all_by_doctor_id(
                                                             self.current_user.user_id)
                 if not availability_list:
                     print("No se encuentran horarios para el profesional. \n")
@@ -362,7 +366,7 @@ class Menu():
                         print("Día no reconocido. Ingrese un día válido.\n")
                         continue
 
-                updated_timeframe = self.__availability_service.update_availability(
+                updated_timeframe = self._availability_service.update_availability(
                     availability_id, timeframe, days)
                 if (updated_timeframe):
                     print("El horario se editó exitosamente. \n")
@@ -377,7 +381,7 @@ class Menu():
                 if (self.current_user.role != RoleEnum.DOCTOR):
                     print("Error, acción solo accesible para doctor! \n")
                     continue
-                availability_list = self.__availability_service.get_all_by_doctor_id(
+                availability_list = self._availability_service.get_all_by_doctor_id(
                                                         self.current_user.user_id)
                 if not availability_list:
                     print("No se encuentran horarios para el profesional. \n")
@@ -395,16 +399,39 @@ class Menu():
                 specialty = input("Ingrese su especialidad médica: ")
                 license_number = int(input("Ingrese su número de matrícula: "))
                 accepts_input = input("¿Acepta obra social? (s/n): ").lower()
-                accepts_medical_ensurance = accepts_input == "s"
+                accepts_medical_insurance = accepts_input == "s"
 
-                self.__user_service.update_doctor_profile(
+                self._user_service.update_doctor_profile(
                     doctor_id = self.current_user.user_id,
                     specialty = specialty,
-                    accepts_medical_ensurance = accepts_medical_ensurance,
+                    accepts_medical_insurance = accepts_medical_insurance,
                     license_number = license_number
                 )
                 print("Datos profesionales editados exitosamente.\n")
 
+
+            #Solo paciente (Fullstack requirement for sprint 2)
+            elif option == "16":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
+                searched_id = None
+                is_doctor = False
+                if (self.current_user.role == RoleEnum.ADMIN):
+                    searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
+                    is_doctor_input = input("¿Es profesional médico? (s/n): ").lower()
+                    is_doctor = is_doctor_input == "s"
+                else:
+                    searched_id = self.current_user.user_id
+                    if (self.current_user.role == RoleEnum.DOCTOR):
+                        is_doctor = True
+                data = self._appointment_service.get_all_appointments_by_user_id(searched_id, is_doctor)
+                if not data:
+                    print("No hay turnos registrados para el usuario. \n")
+                else:
+                    print(f"Lista de turnos del usuario: {data} \n")
+
+            
             elif option == "0":
                 print("Saliendo de WappTurno...\n ")
                 break

@@ -38,7 +38,7 @@ class AppointmentDAO:
                 return True
                 
         except mysql.connector.Error as err:
-            print(f"Error al crear appointment: {err}")
+            print(f"Error al crear el turno: {err}")
             return None
         finally:
             if hasattr(self, "__connection") and self.__connection.is_connected():
@@ -49,19 +49,19 @@ class AppointmentDAO:
         try:
             self.open_connection()
             with self.__connection.cursor() as cursor:
-                query = "UPDATE Appointments SET date_and_time = %s WHERE id = %s AND enabled = TRUE"
+                query = "UPDATE Appointments SET date_and_time = %s " \
+                        "WHERE id = %s AND enabled = TRUE"
                 cursor.execute(query, (date_and_time, appointment_id))
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as err:
-            print(f"Error al reprogramar appointment: {err}")
+            print(f"Error al reprogramar turno: {err}")
             return False
         finally:
             if hasattr(self, "__connection") and self.__connection.is_connected():
                 self.__connection.close()
 
     def delete_appointment(self, appointment_id: str):
-        
         try:
             self.open_connection()
             with self.__connection.cursor() as cursor:
@@ -70,7 +70,7 @@ class AppointmentDAO:
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as err:
-            print(f"Error al eliminar appointment: {err}")
+            print(f"Error al eliminar turno: {err}")
             return False
         finally:
             if hasattr(self, "__connection") and self.__connection.is_connected():
@@ -115,3 +115,60 @@ class AppointmentDAO:
         finally:
             if hasattr(self, "__connection") and self.__connection.is_connected():
                 self.__connection.close()
+
+    def get_appointment_by_id(self, appointment_id: str,
+                              close: bool = True) -> Appointment | None:
+        try:
+            self.open_connection()
+            with self.__connection.cursor(dictionary=True) as cursor:
+                query= ("SELECT * FROM Appointments WHERE id = %s AND enabled = TRUE")
+                cursor.execute(query, (appointment_id,))
+                row = cursor.fetchone()
+                if row:
+                    state_enum = AppointmentStateEnum(row["state"]) if "state" in row else AppointmentStateEnum.SCHEDULED
+                    appointment = Appointment(
+                        date_and_time=row["date_and_time"],
+                        user_id=row["user_id"],
+                        doctor_id=row["doctor_id"],
+                        medical_consultation_id=row["medical_consultation_id"],
+                        frequency=row["frequency"],
+                        state=state_enum,
+                    )
+                    appointment.appointment_id = row.get("id")
+                    appointment.enabled = row.get("enabled", True)
+                    return appointment
+            return None
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al buscar turno por id: {error}")
+        finally:
+            if close:
+                self.__connection.close()
+
+    def get_all_appointments_by_user_id(self, user_id, is_doctor):
+        try:
+            self.open_connection()
+            with self.__connection.cursor(dictionary=True) as cursor:
+                column = "doctor_id" if is_doctor else "user_id"
+                query = f"SELECT * FROM Appointments WHERE {column} = %s AND enabled = TRUE"
+                cursor.execute(query, (user_id,))
+                rows = cursor.fetchall()
+                appointments = []
+                for row in rows:
+                    state_enum = AppointmentStateEnum(row["state"]
+                        .lower()) if "state" in row else AppointmentStateEnum.SCHEDULED
+                    appointment = Appointment(
+                        date_and_time=row["date_and_time"],
+                        user_id=row["user_id"],
+                        doctor_id=row["doctor_id"],
+                        medical_consultation_id=row["medical_consultation_id"],
+                        frequency=row["frequency"],
+                    )
+                    appointment.appointment_id = row.get("id")
+                    appointment.enabled = row.get("enabled", True)
+                    appointment.state = state_enum
+                    appointments.append(appointment)
+            return appointments
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al buscar turnos del usuario: {error}")
+        finally:
+            self.__connection.close()
