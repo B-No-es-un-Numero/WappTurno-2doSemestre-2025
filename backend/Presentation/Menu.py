@@ -4,6 +4,7 @@ from Services.Appointment_service import AppointmentService
 from Models.Role_enum import RoleEnum
 from Models.Days_enum import DaysEnum
 from Models.TimeFrame_enum import TimeFrameEnum
+from datetime import datetime
 
 class Menu():
     
@@ -498,7 +499,7 @@ class Menu():
                 time_str = input("Ingrese hora (HH:MM): ")
                 
                 try:
-                    from datetime import datetime
+                    
                     date_and_time = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
                     
                     

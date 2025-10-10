@@ -9,7 +9,7 @@ from Presentation.Menu2 import Menu2
 def main():
     menu = Menu2(UserService(UserDAO()),
                 AvailabilityService(AvailabilityDAO()),
-                AppointmentService(AppointmentDAO()))
+                AppointmentService(AppointmentDAO(), AvailabilityDAO()))
     menu.run_menu()
 
 if __name__ == "__main__":

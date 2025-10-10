@@ -205,7 +205,6 @@ class AppointmentDAO:
                         appointment.doctor_info = f"Dr. {row.get('doctor_name')} {row.get('doctor_surname')}"
                         appointment.specialty = row.get("specialty")
                     
-                    # Info de la consulta (para ambos)
                     appointment.consultation_name = row.get("consultation_name")
                     
                     appointments.append(appointment)
@@ -216,7 +215,7 @@ class AppointmentDAO:
         finally:
             self.__connection.close()
 
-    def check_time_conflict(self, doctor_id: str, date_and_time: datetime):
+    def check_time_conflict(self, user_id: str, doctor_id: str, date_and_time: datetime):
         
         try:
             self.open_connection()
@@ -224,14 +223,15 @@ class AppointmentDAO:
             query = """
             SELECT COUNT(*) as conflicts
             FROM Appointments 
-            WHERE doctor_id = %s 
-            AND date_and_time = %s
+            WHERE (user_id = %s OR doctor_id = %s) 
+            AND date_and_time BETWEEN DATE_SUB(%s, INTERVAL 59 MINUTE 59 SECOND)
+                         AND DATE_ADD(%s, INTERVAL 59 MINUTE 59 SECOND)
             AND state IN ('SCHEDULED', 'RESCHEDULED')
             AND enabled = 1
             """
             
             cursor = self.__connection.cursor()
-            cursor.execute(query, (doctor_id, date_and_time))
+            cursor.execute(query, (user_id, doctor_id, date_and_time))
             result = cursor.fetchone()
             conflicts_count = result[0]  
             

@@ -11,7 +11,7 @@ class PatientMenu(BaseUserMenu):
         while True:
             print("\n--- MENÚ PACIENTE ---")
             self.show_common_options()
-            print("3. Ver mis turnos")
+            print("3. Ver mis turnos\n")
             print("4. Solicitar nuevo turno")
             # TODO, falta reprogramar turno, cancelarlo, etc.
             print("0. Cerrar sesión")
@@ -46,14 +46,14 @@ class PatientMenu(BaseUserMenu):
         consultation_id = input("ID de la consulta médica: ")
         date = input("Fecha (YYYY-MM-DD): ")
         time = input("Hora (HH:MM): ")
-        try:
-            dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
-            self._appointment_service.create_appointment(
-                date_and_time=dt,
-                user_id=self.user.user_id,
-                doctor_id=doctor_id,
-                medical_consultation_id=consultation_id
-            )
+        dt = datetime.strptime(f"{date} {time}", "%Y-%m-%d %H:%M")
+        success = self._appointment_service.create_appointment(
+            date_and_time=dt,
+            user_id=self.user.user_id,
+            doctor_id=doctor_id,
+            medical_consultation_id=consultation_id
+        )
+        if not success:
+            print("Error al crear el turno")
+        else:
             print("Turno creado exitosamente.\n")
-        except Exception as e:
-            print(f"Error al crear turno: {e}")
