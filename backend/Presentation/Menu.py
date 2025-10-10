@@ -30,6 +30,7 @@ class Menu():
             "14. Mostrar tus horario disponibilidad (solo profesional médico). \n"
             "15. Editar datos del profesional (solo profesional médico). \n"
             "16. Mostrar todos los turnos del usuario. \n"
+            "17. Crear nuevo turno (solo pacientes). \n"
             "0. Salir. \n")
 
             if option == "1":
@@ -431,11 +432,52 @@ class Menu():
                 else:
                     print(f"Lista de turnos del usuario: {data} \n")
 
+            #Solo paciente (Fullstack requirement for sprint 2)
+            elif option == "17":
+                if (self.current_user == None):
+                    print("Error, debe iniciar sesión primero! \n")
+                    continue
             
+                if (self.current_user.role != RoleEnum.PATIENT):
+                    print("Error, solo los pacientes pueden crear turnos! \n")
+                    continue
+            
+                
+                print("=== CREAR NUEVO TURNO ===")
+                doctor_id = input("Ingrese ID del doctor: ")
+                medical_consultation_id = input("Ingrese ID de consulta médica: ")
+                
+                
+                date_str = input("Ingrese fecha (YYYY-MM-DD): ")
+                time_str = input("Ingrese hora (HH:MM): ")
+                
+                try:
+                    from datetime import datetime
+                    date_and_time = datetime.strptime(f"{date_str} {time_str}", "%Y-%m-%d %H:%M")
+                    
+                    
+                    appointment = self._appointment_service.create_appointment(
+                        date_and_time=date_and_time,
+                        user_id=self.current_user.user_id,
+                        doctor_id=doctor_id,
+                        medical_consultation_id=medical_consultation_id
+                    )
+                    
+                    if appointment:
+                        print("✅ Turno creado exitosamente!")
+                        print(f"ID del turno: {appointment.appointment_id}")
+                    else:
+                        print("❌ No se pudo crear el turno")
+                        
+                except ValueError:
+                    print("❌ Formato de fecha/hora inválido")
+                except Exception as e:
+                    print(f"❌ Error: {e}")
+
+            #Opcion 0
             elif option == "0":
                 print("Saliendo de WappTurno...\n ")
                 break
             
             else:
                 print("Opción no válida. Por favor, vuelva a intentar.\n")
-

@@ -172,3 +172,33 @@ class AppointmentDAO:
             raise Exception(f"Error al buscar turnos del usuario: {error}")
         finally:
             self.__connection.close()
+
+    def check_time_conflict(self, doctor_id: str, date_and_time: datetime):
+        
+        try:
+            self.open_connection()
+            
+            query = """
+            SELECT COUNT(*) as conflicts
+            FROM Appointments 
+            WHERE doctor_id = %s 
+            AND date_and_time = %s
+            AND state IN ('SCHEDULED', 'RESCHEDULED')
+            AND enabled = 1
+            """
+            
+            cursor = self.__connection.cursor()
+            cursor.execute(query, (doctor_id, date_and_time))
+            result = cursor.fetchone()
+            conflicts_count = result[0]  
+            
+            return conflicts_count > 0
+            
+        except Exception as e:
+            print(f"Error al verificar conflictos: {e}")
+            return True  
+        finally:
+            self.__connection.close()
+
+    
+

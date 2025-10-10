@@ -113,17 +113,21 @@ class AppointmentService:
             return None
         return appointment_list
     
-    '''TODO: Comprobar también contra db que no haya turnos iniciados
-        o por iniciar en esa franja horaria y agregar mensajes de error'''
+    
     def _validate_appointment_data(self, date_and_time: datetime, user_id: str, 
                                   doctor_id: str, medical_consultation_id: str):
         
         if date_and_time < datetime.now():
-            print("Error: No se puede crear un turno en el pasado")
+            print("Error: No se puede agendar en el pasado")
             return False
         
-        if not all([user_id, doctor_id, medical_consultation_id]):
-            print("Error: Faltan campos obligatorios")
+        if not user_id or not doctor_id or not medical_consultation_id:
+            print("Error: Todos los campos son requeridos")
+            return False
+        
+        if self._appointment_dao.check_time_conflict(doctor_id, date_and_time):
+            print(f"Error: El doctor ya tiene un turno a las {date_and_time.strftime('%H:%M')}")
+            print("Los turnos son de 1 hora")
             return False
         
         return True
