@@ -1,12 +1,16 @@
 from Models.Appointment import Appointment
 from Models.Appointment_state_enum import AppointmentStateEnum
+from Models.Days_enum import DaysEnum
+from Models.TimeFrame_enum import TimeFrameEnum
 from DAO.Appointment_DAO import AppointmentDAO
+from DAO.Availability_DAO import AvailabilityDAO
 from datetime import datetime
 
 class AppointmentService:
     
-    def __init__(self, appointment_dao: AppointmentDAO):
+    def __init__(self, appointment_dao: AppointmentDAO, availability_dao: AvailabilityDAO):
         self._appointment_dao = appointment_dao
+        self._availability_dao = availability_dao
 
 
     def create_appointment(self, date_and_time: datetime, user_id: str, doctor_id: str, 
@@ -119,20 +123,41 @@ class AppointmentService:
                                   doctor_id: str, medical_consultation_id: str):
         
         if date_and_time < datetime.now():
-            print("Error: No se puede agendar en el pasado")
+            print("Error: No se puede agendar turno en fecha y hora pasada")
             return False
         
         if not user_id or not doctor_id or not medical_consultation_id:
             print("Error: Todos los campos son requeridos")
             return False
         
-        if self._appointment_dao.check_time_conflict(doctor_id, date_and_time):
-            print(f"Error: El doctor ya tiene un turno a las {date_and_time.strftime('%H:%M')}")
-            print("Los turnos son de 1 hora")
+        if self._appointment_dao.check_time_conflict(user_id, doctor_id, date_and_time):
+            print(f"""Error: Uno de los usuarios ya tiene un turno a las 
+                  {date_and_time.strftime('%H:%M')}. Recuerde que los turnos son de 1 hora.""")
             return False
         
+        self._validate_date_with_doctor_availability(doctor_id, date_and_time)
+
         return True
     
-    
-
+        
+    def _validate_date_with_doctor_availability(self, doctor_id: str, date_and_time: datetime):  
+        availability_list = self._availability_dao.get_all_by_doctor_id(doctor_id)
+        for availability in availability_list:
+            if (date_and_time.weekday() == 0 and availability.days == DaysEnum.LUNES) or \
+            (date_and_time.weekday() == 1 and availability.days == DaysEnum.MARTES) or \
+            (date_and_time.weekday() == 2 and availability.days == DaysEnum.MIERCOLES) or \
+            (date_and_time.weekday() == 3 and availability.days == DaysEnum.JUEVES) or \
+            (date_and_time.weekday() == 4 and availability.days == DaysEnum.VIERNES) or \
+            (date_and_time.weekday() == 5 and availability.days == DaysEnum.SABADO) or \
+            (date_and_time.weekday() == 6 and availability.days == DaysEnum.DOMINGO):
+                hour = date_and_time.hour
+                timeframe = availability.timeframe
+                if timeframe == TimeFrameEnum.MAÑANA and 6 <= hour < 12:
+                    return True
+                elif timeframe == TimeFrameEnum.TARDE and 12 <= hour < 18:
+                    return True
+                elif timeframe == TimeFrameEnum.NOCHE and 18 <= hour <= 23:
+                    return True
+        
+        return False
     
