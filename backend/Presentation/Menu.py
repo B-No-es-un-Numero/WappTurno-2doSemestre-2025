@@ -411,26 +411,75 @@ class Menu():
                 print("Datos profesionales editados exitosamente.\n")
 
 
-            #Solo paciente (Fullstack requirement for sprint 2)
+            # Ver mis turnos (Doctores y Pacientes)
             elif option == "16":
                 if (self.current_user == None):
                     print("Error, debe iniciar sesión primero! \n")
                     continue
-                searched_id = None
-                is_doctor = False
-                if (self.current_user.role == RoleEnum.ADMIN):
-                    searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-                    is_doctor_input = input("¿Es profesional médico? (s/n): ").lower()
-                    is_doctor = is_doctor_input == "s"
-                else:
-                    searched_id = self.current_user.user_id
-                    if (self.current_user.role == RoleEnum.DOCTOR):
-                        is_doctor = True
-                data = self._appointment_service.get_all_appointments_by_user_id(searched_id, is_doctor)
+                
+                user_id = self.current_user.user_id
+                is_doctor = (self.current_user.role == RoleEnum.DOCTOR)
+                
+                data = self._appointment_service.get_all_appointments_by_user_id(user_id, is_doctor)
+                
                 if not data:
-                    print("No hay turnos registrados para el usuario. \n")
+                    print("\n" + "="*50)
+                    print("NO HAY TURNOS REGISTRADOS")
+                    print("="*50)
+                    print("   No tienes turnos agendados por el momento.")
+                    if not is_doctor:  
+                        print("   ¡Puedes crear uno nuevo con la opción 17!")
+                    print("="*50 + "\n")
                 else:
-                    print(f"Lista de turnos del usuario: {data} \n")
+                    
+                    print("\n" + "="*60)
+                    if is_doctor:
+                        print("MIS PACIENTES - TURNOS AGENDADOS")
+                    else:
+                        print("MIS TURNOS MÉDICOS")
+                    print("="*60)
+                    
+                    for i, apt in enumerate(data, 1):
+                        print(f"\n🔹 TURNO #{i}")
+                        print(f"Fecha: {apt.date_and_time.strftime('%d/%m/%Y a las %H:%M')}")
+                        print(f"Consulta: {apt.consultation_name}")
+                        print(f"Estado: {apt.state.value}")
+                        
+                        if is_doctor:
+                            # Vista para doctores - VER SUS PACIENTES
+                            print(f"👤 Paciente: {apt.patient_name} {apt.patient_surname}")
+                            print(f"📧 Email: {apt.patient_email}")
+                        else:
+                            # Vista para pacientes - VER SUS DOCTORES
+                            print(f"Doctor: {apt.doctor_name} {apt.doctor_surname}")
+                            print(f"Especialidad: {apt.specialty}")
+                        
+                        print("-" * 40)
+                    
+                    print(f"\nTotal: {len(data)} turnos")
+                    print("="*60 + "\n")
+
+            #CODIGO DE ANTES
+             #Solo paciente (Fullstack requirement for sprint 2)
+            # elif option == "16":
+            #     if (self.current_user == None):
+            #         print("Error, debe iniciar sesión primero! \n")
+            #         continue
+            #     searched_id = None
+            #     is_doctor = False
+            #     if (self.current_user.role == RoleEnum.ADMIN):
+            #         searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
+            #         is_doctor_input = input("¿Es profesional médico? (s/n): ").lower()
+            #         is_doctor = is_doctor_input == "s"
+            #     else:
+            #         searched_id = self.current_user.user_id
+            #         if (self.current_user.role == RoleEnum.DOCTOR):
+            #             is_doctor = True
+            #     data = self._appointment_service.get_all_appointments_by_user_id(searched_id, is_doctor)
+            #     if not data:
+            #         print("No hay turnos registrados para el usuario. \n")
+            #     else:
+            #         print(f"Lista de turnos del usuario: {data} \n")
 
             #Solo paciente (Fullstack requirement for sprint 2)
             elif option == "17":

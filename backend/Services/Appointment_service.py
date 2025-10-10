@@ -66,8 +66,8 @@ class AppointmentService:
             print("Error: ID de turno requerido.")
             return False
         
-        if frequency and frequency not in ["semanal", "mensual", "quincenal"]:
-            print("Error: Frecuencia inválida. Use: semanal, mensual o quincenal")
+        if frequency and frequency not in ["unico","semanal", "mensual", "quincenal"]:
+            print("Error: Frecuencia inválida. Use: unico, semanal, mensual o quincenal")
             return False
         
         success = self._appointment_dao.update_frequency(appointment_id, frequency)
