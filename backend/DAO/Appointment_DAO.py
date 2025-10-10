@@ -148,14 +148,43 @@ class AppointmentDAO:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                column = "doctor_id" if is_doctor else "user_id"
-                query = f"SELECT * FROM Appointments WHERE {column} = %s AND enabled = TRUE"
+                
+                if is_doctor:
+                    
+                    query = """
+                    SELECT 
+                        a.id, a.date_and_time, a.state, a.frequency, a.enabled,
+                        a.user_id, a.doctor_id, a.medical_consultation_id,
+                        u.name as patient_name, u.surname as patient_surname,
+                        mc.name as consultation_name
+                    FROM Appointments a
+                    JOIN Users u ON a.user_id = u.id
+                    JOIN Medical_consultations mc ON a.medical_consultation_id = mc.id
+                    WHERE a.doctor_id = %s AND a.enabled = TRUE
+                    ORDER BY a.date_and_time
+                    """
+                else:
+                    
+                    query = """
+                    SELECT 
+                        a.id, a.date_and_time, a.state, a.frequency, a.enabled,
+                        a.user_id, a.doctor_id, a.medical_consultation_id,
+                        d.name as doctor_name, d.surname as doctor_surname,
+                        doc.specialty, mc.name as consultation_name
+                    FROM Appointments a
+                    JOIN Users d ON a.doctor_id = d.id
+                    JOIN Doctors doc ON a.doctor_id = doc.user_id
+                    JOIN Medical_consultations mc ON a.medical_consultation_id = mc.id
+                    WHERE a.user_id = %s AND a.enabled = TRUE
+                    ORDER BY a.date_and_time
+                    """
+                
                 cursor.execute(query, (user_id,))
                 rows = cursor.fetchall()
                 appointments = []
+                
                 for row in rows:
-                    state_enum = AppointmentStateEnum(row["state"]
-                        .lower()) if "state" in row else AppointmentStateEnum.SCHEDULED
+                    state_enum = AppointmentStateEnum(row["state"].lower()) if "state" in row else AppointmentStateEnum.SCHEDULED
                     appointment = Appointment(
                         date_and_time=row["date_and_time"],
                         user_id=row["user_id"],
@@ -166,9 +195,53 @@ class AppointmentDAO:
                     appointment.appointment_id = row.get("id")
                     appointment.enabled = row.get("enabled", True)
                     appointment.state = state_enum
+                    
+                    
+                    if is_doctor:
+                        
+                        appointment.patient_info = f"{row.get('patient_name')} {row.get('patient_surname')}"
+                    else:
+                        
+                        appointment.doctor_info = f"Dr. {row.get('doctor_name')} {row.get('doctor_surname')}"
+                        appointment.specialty = row.get("specialty")
+                    
+                    # Info de la consulta (para ambos)
+                    appointment.consultation_name = row.get("consultation_name")
+                    
                     appointments.append(appointment)
+                    
             return appointments
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar turnos del usuario: {error}")
         finally:
             self.__connection.close()
+
+    def check_time_conflict(self, doctor_id: str, date_and_time: datetime):
+        
+        try:
+            self.open_connection()
+            
+            query = """
+            SELECT COUNT(*) as conflicts
+            FROM Appointments 
+            WHERE doctor_id = %s 
+            AND date_and_time = %s
+            AND state IN ('SCHEDULED', 'RESCHEDULED')
+            AND enabled = 1
+            """
+            
+            cursor = self.__connection.cursor()
+            cursor.execute(query, (doctor_id, date_and_time))
+            result = cursor.fetchone()
+            conflicts_count = result[0]  
+            
+            return conflicts_count > 0
+            
+        except Exception as e:
+            print(f"Error al verificar conflictos: {e}")
+            return True  
+        finally:
+            self.__connection.close()
+
+    
+
