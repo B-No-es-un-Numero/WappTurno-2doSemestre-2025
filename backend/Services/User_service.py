@@ -100,7 +100,7 @@ class UserService:
 
     #Solo para propio user
     def update_user(self, name: str, surname: str, dni: int, 
-                       email: str, password: str, phone_number: int) -> 'User':
+                       email: str, phone_number: int, password: str) -> 'User':
         
         if not all([name, surname, dni, email, password, phone_number]):
             print("Error! No se permiten campos vacíos. \n")
