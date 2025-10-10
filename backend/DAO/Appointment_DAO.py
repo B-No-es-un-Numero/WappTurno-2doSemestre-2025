@@ -150,14 +150,13 @@ class AppointmentDAO:
             with self.__connection.cursor(dictionary=True) as cursor:
                 
                 if is_doctor:
-                    # Si es doctor, traer info del paciente y consulta médica
+                    
                     query = """
                     SELECT 
                         a.id, a.date_and_time, a.state, a.frequency, a.enabled,
                         a.user_id, a.doctor_id, a.medical_consultation_id,
-                        u.name as patient_name, u.surname as patient_surname, 
-                        u.email as patient_email, u.phone_number as patient_phone,
-                        mc.name as consultation_name, mc.code as consultation_code
+                        u.name as patient_name, u.surname as patient_surname,
+                        mc.name as consultation_name
                     FROM Appointments a
                     JOIN Users u ON a.user_id = u.id
                     JOIN Medical_consultations mc ON a.medical_consultation_id = mc.id
@@ -165,15 +164,13 @@ class AppointmentDAO:
                     ORDER BY a.date_and_time
                     """
                 else:
-                    # Si es paciente, traer info del doctor y consulta médica
+                    
                     query = """
                     SELECT 
                         a.id, a.date_and_time, a.state, a.frequency, a.enabled,
                         a.user_id, a.doctor_id, a.medical_consultation_id,
-                        d.name as doctor_name, d.surname as doctor_surname, 
-                        d.email as doctor_email, d.phone_number as doctor_phone,
-                        doc.specialty, doc.license_number,
-                        mc.name as consultation_name, mc.code as consultation_code
+                        d.name as doctor_name, d.surname as doctor_surname,
+                        doc.specialty, mc.name as consultation_name
                     FROM Appointments a
                     JOIN Users d ON a.doctor_id = d.id
                     JOIN Doctors doc ON a.doctor_id = doc.user_id
@@ -199,22 +196,17 @@ class AppointmentDAO:
                     appointment.enabled = row.get("enabled", True)
                     appointment.state = state_enum
                     
-                    # 🆕 AGREGAR datos adicionales como atributos dinámicos
-                    if is_doctor:
-                        appointment.patient_name = row.get("patient_name")
-                        appointment.patient_surname = row.get("patient_surname")
-                        appointment.patient_email = row.get("patient_email")
-                        appointment.patient_phone = row.get("patient_phone")
-                    else:
-                        appointment.doctor_name = row.get("doctor_name")
-                        appointment.doctor_surname = row.get("doctor_surname")
-                        appointment.doctor_email = row.get("doctor_email")
-                        appointment.doctor_phone = row.get("doctor_phone")
-                        appointment.specialty = row.get("specialty")
-                        appointment.license_number = row.get("license_number")
                     
+                    if is_doctor:
+                        
+                        appointment.patient_info = f"{row.get('patient_name')} {row.get('patient_surname')}"
+                    else:
+                        
+                        appointment.doctor_info = f"Dr. {row.get('doctor_name')} {row.get('doctor_surname')}"
+                        appointment.specialty = row.get("specialty")
+                    
+                    # Info de la consulta (para ambos)
                     appointment.consultation_name = row.get("consultation_name")
-                    appointment.consultation_code = row.get("consultation_code")
                     
                     appointments.append(appointment)
                     

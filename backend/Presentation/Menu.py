@@ -445,13 +445,10 @@ class Menu():
                         print(f"Consulta: {apt.consultation_name}")
                         print(f"Estado: {apt.state.value}")
                         
-                        if is_doctor:
-                            # Vista para doctores - VER SUS PACIENTES
-                            print(f"👤 Paciente: {apt.patient_name} {apt.patient_surname}")
-                            print(f"📧 Email: {apt.patient_email}")
-                        else:
-                            # Vista para pacientes - VER SUS DOCTORES
-                            print(f"Doctor: {apt.doctor_name} {apt.doctor_surname}")
+                        if is_doctor: 
+                            print(f"Paciente: {apt.patient_info}")
+                        else:   
+                            print(f"Doctor: {apt.doctor_info}")
                             print(f"Especialidad: {apt.specialty}")
                         
                         print("-" * 40)
@@ -513,15 +510,15 @@ class Menu():
                     )
                     
                     if appointment:
-                        print("✅ Turno creado exitosamente!")
+                        print("Turno creado exitosamente!")
                         print(f"ID del turno: {appointment.appointment_id}")
                     else:
-                        print("❌ No se pudo crear el turno")
+                        print("No se pudo crear el turno")
                         
                 except ValueError:
-                    print("❌ Formato de fecha/hora inválido")
+                    print("Formato de fecha/hora inválido")
                 except Exception as e:
-                    print(f"❌ Error: {e}")
+                    print(f"Error: {e}")
 
             #Opcion 0
             elif option == "0":
