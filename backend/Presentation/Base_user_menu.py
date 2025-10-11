@@ -63,9 +63,9 @@ class BaseUserMenu:
     def update_frequency(self):
         if(self.user.role == RoleEnum.ADMIN):
             searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-            data = self._appointment_service.get_all_appointments_by_user_id(searched_id)
+            data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         elif(self.user.role == RoleEnum.DOCTOR):        
-             data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
+             data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, False)
         else:
             data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, False)
         
@@ -82,9 +82,9 @@ class BaseUserMenu:
     def update_state(self):
         if(self.user.role == RoleEnum.ADMIN):
             searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-            data = self._appointment_service.get_all_appointments_by_user_id(searched_id)
+            data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         elif(self.user.role == RoleEnum.DOCTOR):        
-             data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
+             data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, False)
         else:
             data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, False)
         

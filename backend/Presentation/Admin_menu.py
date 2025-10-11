@@ -94,13 +94,27 @@ class AdminMenu(BaseUserMenu):
 
 
     def show_appointments(self):
+        users = self._user_service.get_all_users()
+        for u in users or []:
+            print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
         searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-        data = self._appointment_service.get_all_appointments_by_user_id(searched_id)
+        data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         if not data:
             print("No hay turnos registrados.\n")
-        else:
-            for appointment in data:
-                print(f"- {appointment}")
+            return
+        print("\n=== TURNOS (ADMINISTRADOR) ===\n")
+        for idx, appointment in enumerate(data, start=1):
+            print(f"Turno #{idx}")
+            print(f"ID Turno:         {appointment.appointment_id}")
+            print(f"Fecha y hora:     {appointment.date_and_time}")
+            print(f"Estado:           {appointment.state.value}")
+            print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+            print(f"Paciente:         {appointment.patient_info}")
+            print(f"Médico:           {appointment.doctor_info}")
+            print(f"Especialidad:     {appointment.specialty}")
+            print(f"Consulta:         {appointment.consultation_name}")
+            print(f"Habilitado:       {'Sí' if appointment.enabled else 'No'}")
+            print("-" * 50)
 
 
     def delete_appointment(self):
@@ -108,7 +122,7 @@ class AdminMenu(BaseUserMenu):
         for u in users or []:
             print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
         searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-        data = self._appointment_service.get_all_appointments_by_user_id(searched_id)
+        data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         if not data:
             print("No hay turnos registrados.\n")
             return False

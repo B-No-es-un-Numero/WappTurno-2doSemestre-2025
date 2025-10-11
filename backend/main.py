@@ -4,10 +4,10 @@ from Services.Appointment_service import AppointmentService
 from DAO.User_DAO import UserDAO
 from DAO.Availability_DAO import AvailabilityDAO
 from DAO.Appointment_DAO import AppointmentDAO
-from Presentation.Menu2 import Menu2
+from Presentation.Menu import Menu
 
 def main():
-    menu = Menu2(UserService(UserDAO()),
+    menu = Menu(UserService(UserDAO()),
                 AvailabilityService(AvailabilityDAO()),
                 AppointmentService(AppointmentDAO(), AvailabilityDAO()))
     menu.run_menu()

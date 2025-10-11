@@ -47,9 +47,16 @@ class DoctorMenu(BaseUserMenu):
         data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
         if not data:
             print("No hay turnos registrados.\n")
-        else:
-            for appointment in data:
-                print(f"- {appointment}")
+            return
+        print("\n=== TURNERO DEL PROFESIONAL DE SALUD ===\n")
+        for idx, appointment in enumerate(data, start=1):
+            print(f"Turno #{idx}")
+            print(f"Fecha y hora:     {appointment.date_and_time}")
+            print(f"Estado:           {appointment.state.value}")
+            print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+            print(f"Paciente:         {appointment.patient_info}")
+            print(f"Consulta:         {appointment.consultation_name}")
+            print("-" * 50)
 
 
     def add_availability(self):
