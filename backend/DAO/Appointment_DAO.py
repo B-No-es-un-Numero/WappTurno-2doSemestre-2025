@@ -1,5 +1,6 @@
 from Models.Appointment import Appointment
 from Models.Appointment_state_enum import AppointmentStateEnum
+from Models.Medical_consultation import Medical_consultation
 from DAO.connection_mysql import connection_mysql
 import mysql.connector
 from datetime import datetime
@@ -144,7 +145,7 @@ class AppointmentDAO:
             if close:
                 self.__connection.close()
 
-    def get_all_appointments_by_user_id(self, user_id):
+    def get_all_appointments_by_user_id(self, user_id: str, close: bool = True):
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
@@ -182,7 +183,7 @@ class AppointmentDAO:
                     appointment.enabled = row.get("enabled", True)
                     appointment.state = state_enum
                     appointment.patient_info = f"{row.get('patient_name')} {row.get('patient_surname')}"
-                    appointment.doctor_info = f"Dr. {row.get('doctor_name')} {row.get('doctor_surname')}"
+                    appointment.doctor_info = f"Dr/a. {row.get('doctor_name')} {row.get('doctor_surname')}"
                     appointment.specialty = row.get("specialty")
                     appointment.consultation_name = row.get("consultation_name")
                     appointments.append(appointment)
@@ -191,7 +192,8 @@ class AppointmentDAO:
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar turnos del usuario: {error}")
         finally:
-            self.__connection.close()
+            if close:
+                self.__connection.close()
 
     def check_time_conflict(self, user_id: str, doctor_id: str, date_and_time: datetime):
         try:
@@ -219,3 +221,31 @@ class AppointmentDAO:
         finally:
             if hasattr(self, "__connection") and self.__connection.is_connected():
                 self.__connection.close()
+
+    def get_all_medical_consultations(self) -> list['Medical_consultation']:
+        try:
+            self.open_connection()
+            with self.__connection.cursor(dictionary=True) as cursor:
+                query = """
+                    SELECT id, name, code
+                    FROM Medical_consultations
+                    ORDER BY name
+                """
+                cursor.execute(query)
+                rows = cursor.fetchall()
+                consultations = []
+
+                for row in rows:
+                    consultation = Medical_consultation(
+                        name=row["name"],
+                        code=row["code"],
+                        id=row["id"]
+                    )
+                    consultations.append(consultation)
+
+                return consultations
+
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al buscar consultas médicas: {error}")
+        finally:
+            self.__connection.close()

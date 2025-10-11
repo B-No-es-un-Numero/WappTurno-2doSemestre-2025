@@ -1,4 +1,5 @@
 from Presentation.Base_user_menu import BaseUserMenu
+from Models.Role_enum import RoleEnum
 from datetime import datetime
 
 class PatientMenu(BaseUserMenu):
@@ -31,15 +32,30 @@ class PatientMenu(BaseUserMenu):
                 print("Opción no válida.\n")
 
     def show_appointments(self):
-        data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, False)
+        data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
         if not data:
             print("No hay turnos registrados.\n")
+            return
         else:
-            for appointment in data:
-                print(f"- {appointment}")
+            print("\n=== TURNOS DEL PACIENTE ===\n")
+            for idx, appointment in enumerate(data, start=1):
+                print(f"Turno #{idx}")
+                print(f"Fecha y hora:     {appointment.date_and_time}")
+                print(f"Estado:           {appointment.state.value}")
+                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+                print(f"Médico:           {appointment.doctor_info}")
+                print(f"Especialidad:     {appointment.specialty}")
+                print(f"Consulta:         {appointment.consultation_name}")
+                print("-" * 50)
 
     def create_appointment(self):
+        doctors = self._user_service.get_all_users_by_role(RoleEnum.DOCTOR)
+        for d in doctors or []:
+            print(f"- {d.user_id} {d.name} {d.surname} {d.specialty}")
         doctor_id = input("ID del doctor: ")
+        medical_consultations = self._appointment_service.get_all_medical_consultations()
+        for mc in medical_consultations or []:
+            print(f"- {mc.id} {mc.code} {mc.name}")
         consultation_id = input("ID de la consulta médica: ")
         date = input("Fecha (YYYY-MM-DD): ")
         time = input("Hora (HH:MM): ")

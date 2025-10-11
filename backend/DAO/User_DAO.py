@@ -149,7 +149,7 @@ class UserDAO:
         finally: self.__connection.close()
 
 
-    def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
+    def get_all_users_by_role2(self, role: RoleEnum) -> list['User']:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
@@ -176,36 +176,64 @@ class UserDAO:
             raise Exception(f"Error al buscar usuarios por rol: {error}")
         finally:
             self.__connection.close()
-
-    #No usado hasta que no agreguemos las otras clases y services.
-    def get_all_doctor(self,):
+ 
+    def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("SELECT * FROM Users WHERE role = 'doctor' AND enabled = TRUE")
-                cursor.execute(query, ())
+                query = """
+                    SELECT 
+                        u.*,
+                        d.specialty,
+                        d.accepts_medical_insurance,
+                        d.license_number
+                    FROM Users u
+                    LEFT JOIN Doctors d ON u.id = d.user_id
+                    WHERE u.role = %s AND u.enabled = TRUE
+                """
+                cursor.execute(query, (role.value,))
                 rows = cursor.fetchall()
                 users = []
-
-                for row in rows:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.enabled = row.get("enabled", True)
-                    users.append(user)
-            return users
-        except mysql.connector.Error as error:
-            raise Exception(f"Error al buscar doctores: {error}")
-        finally: self.__connection.close()
     
+                for row in rows:
+                    if row.get("specialty") is not None:
+                        doctor = Doctor(
+                            name=row["name"],
+                            surname=row["surname"],
+                            dni=row["dni"],
+                            email=row["email"],
+                            password=row["password"],
+                            phone_number=row["phone_number"],
+                            date_of_birth=row["date_of_birth"],
+                            specialty=row["specialty"],
+                            accepts_medical_insurance=row["accepts_medical_insurance"],
+                            license_number=row["license_number"]
+                        )
+                        doctor.user_id = row["id"]
+                        doctor.enabled = row.get("enabled", True)
+                        users.append(doctor)
+                    else:
+                        user = User(
+                            name=row["name"],
+                            surname=row["surname"],
+                            dni=row["dni"],
+                            email=row["email"],
+                            password=row["password"],
+                            phone_number=row["phone_number"],
+                            role=RoleEnum(row["role"]),
+                            date_of_birth=row["date_of_birth"]
+                        )
+                        user.user_id = row["id"]
+                        user.enabled = row.get("enabled", True)
+                        users.append(user)
+    
+                return users
+    
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al buscar usuarios por rol: {error}")
+        finally:
+            self.__connection.close()
+
 
     def update_user(self, name: str, surname: str, dni: int,
                     email: str, password: str, phone_number: int) -> User | None:

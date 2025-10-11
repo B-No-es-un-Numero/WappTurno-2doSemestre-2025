@@ -1,4 +1,5 @@
 from Models.Appointment import Appointment
+from Models.Medical_consultation import Medical_consultation
 from Models.Appointment_state_enum import AppointmentStateEnum
 from Models.Days_enum import DaysEnum
 from Models.TimeFrame_enum import TimeFrameEnum
@@ -110,15 +111,22 @@ class AppointmentService:
         return appointment
     
     
-    def get_all_appointments_by_user_id(self, user_id: str, 
-                                is_doctor: bool) -> list['Appointment']:
-        appointment_list = self._appointment_dao.get_all_appointments_by_user_id(user_id)
+    def get_all_appointments_by_user_id(self, user_id: str, close: bool = True) -> list['Appointment']:
+        appointment_list = self._appointment_dao.get_all_appointments_by_user_id(user_id, close)
         if not appointment_list:
             print("No se encontraron turnos para este usuario. \n")
             return None
         return appointment_list
     
     
+    def get_all_medical_consultations(self) -> list['Medical_consultation']:
+        medical_consultation_list = self._appointment_dao.get_all_medical_consultations()
+        if not medical_consultation_list:
+            print("Error: No se encontraron prestaciones médicas. \n")
+            return None
+        return medical_consultation_list
+
+
     def _validate_appointment_data(self, date_and_time: datetime, user_id: str, 
                                   doctor_id: str, medical_consultation_id: str):
         

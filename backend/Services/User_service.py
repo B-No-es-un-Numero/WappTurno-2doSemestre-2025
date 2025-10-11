@@ -93,7 +93,6 @@ class UserService:
         users = self._dao.get_all_users()
         return users
    
-   #Solo para admin
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         users = self._dao.get_all_users_by_role(role)
         return users
