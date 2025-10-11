@@ -72,11 +72,21 @@ class BaseUserMenu:
         if not data:
             print("No hay turnos registrados.\n")
         else:
-            for appointment in data:
-                print(f"- {appointment}")
+            print("\n=== TURNOS ===\n")
+            for idx, appointment in enumerate(data, start=1):
+                print(f"Turno #{idx}")
+                print(f"ID Turno:         {appointment.appointment_id}")
+                print(f"Fecha y hora:     {appointment.date_and_time}")
+                print(f"Estado:           {appointment.state.value}")
+                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+                print(f"Paciente:         {appointment.patient_info}")
+                print(f"Médico:           {appointment.doctor_info}")
+                print(f"Especialidad:     {appointment.specialty}")
+                print(f"Consulta:         {appointment.consultation_name}")
+                print("-" * 50)
         
-        appointment_id = input("Ingrese el ID del turno: ")
-        frequency = input("Ingrese nueva frecuencia (semanal/mensual/quincenal): ")
+        appointment_id = input("\n Ingrese el ID del turno: ")
+        frequency = input("\n Ingrese nueva frecuencia (semanal/mensual/quincenal): ")
         self._appointment_service.update_frequency(appointment_id, frequency)
 
     def update_state(self):
@@ -91,18 +101,25 @@ class BaseUserMenu:
         if not data:
             print("No hay turnos registrados.\n")
         else:
-            for appointment in data:
-                print(f"- {appointment}")
+            print("\n=== TURNOS ===\n")
+            for idx, appointment in enumerate(data, start=1):
+                print(f"Turno #{idx}")
+                print(f"ID Turno:         {appointment.appointment_id}")
+                print(f"Fecha y hora:     {appointment.date_and_time}")
+                print(f"Estado:           {appointment.state.value}")
+                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+                print(f"Paciente:         {appointment.patient_info}")
+                print(f"Médico:           {appointment.doctor_info}")
+                print(f"Especialidad:     {appointment.specialty}")
+                print(f"Consulta:         {appointment.consultation_name}")
+                print("-" * 50)
 
-        appointment_id = input("Ingrese el ID del turno: ")
-        print("Seleccione nuevo estado:")
-        print(" 1. Confirmado\n 2. Reprogramado\n 3. Cancelado\n 4. Finalizado")
-        option = input("Opción: ")
+        appointment_id = input("\n Ingrese el ID del turno: ")
+        option = input("\n Seleccione nuevo estado:\n 1. Confirmado\n 2. Cancelado\n 3. Finalizado \nOpción: ")
         state_map = {
             "1": AppointmentStateEnum.CONFIRMED,
-            "2": AppointmentStateEnum.RESCHEDULED,
-            "3": AppointmentStateEnum.CANCELLED,
-            "4": AppointmentStateEnum.COMPLETED   
+            "2":  AppointmentStateEnum.CANCELLED,
+            "3": AppointmentStateEnum.COMPLETED   
         }
         new_state = state_map.get(option)
         if new_state:

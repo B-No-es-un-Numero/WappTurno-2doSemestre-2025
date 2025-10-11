@@ -37,9 +37,10 @@ class PatientMenu(BaseUserMenu):
             print("No hay turnos registrados.\n")
             return
         else:
-            print("\n=== TURNOS DEL PACIENTE ===\n")
+            print("\n=== TURNOS ===\n")
             for idx, appointment in enumerate(data, start=1):
                 print(f"Turno #{idx}")
+                print(f"ID Turno:         {appointment.appointment_id}")
                 print(f"Fecha y hora:     {appointment.date_and_time}")
                 print(f"Estado:           {appointment.state.value}")
                 print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
@@ -76,8 +77,17 @@ class PatientMenu(BaseUserMenu):
         if not data:
             print("No hay turnos registrados.\n")
         else:
-            for appointment in data:
-                print(f"- {appointment}")
+            print("\n=== TURNOS ===\n")
+            for idx, appointment in enumerate(data, start=1):
+                print(f"Turno #{idx}")
+                print(f"ID Turno:         {appointment.appointment_id}")
+                print(f"Fecha y hora:     {appointment.date_and_time}")
+                print(f"Estado:           {appointment.state.value}")
+                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+                print(f"Médico:           {appointment.doctor_info}")
+                print(f"Especialidad:     {appointment.specialty}")
+                print(f"Consulta:         {appointment.consultation_name}")
+                print("-" * 50)
         appointment_id = input("Ingrese el ID del turno a reprogramar: ")
         new_date = input("Ingrese la nueva fecha (YYYY-MM-DD): ")
         new_time = input("Ingrese la nueva hora (HH:MM): ")
