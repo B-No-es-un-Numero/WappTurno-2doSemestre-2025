@@ -5,37 +5,36 @@ from Models.TimeFrame_enum import TimeFrameEnum
 
 class DoctorMenu(BaseUserMenu):
     def __init__(self, user_service, availability_service, appointment_service, user):
-        super().__init__(user_service, user)
+        super().__init__(user_service, user, appointment_service)
         self._availability_service = availability_service
-        self._appointment_service = appointment_service
 
     def run(self):
         while True:
             print("\n--- MENÚ DOCTOR ---")
             self.show_common_options()
-            print("3. Ver mis turnero")
-            print("4. Crear horario de disponibilidad")
-            print("5. Editar horario")
-            print("6. Eliminar horario")
-            print("7. Mostrar horarios")
-            print("8. Editar datos profesionales")
+            print("5. Ver mis turnero")
+            print("6. Crear horario de disponibilidad")
+            print("7. Editar horario")
+            print("8. Eliminar horario")
+            print("9. Mostrar horarios")
+            print("10. Editar datos profesionales")
             print("0. Cerrar sesión")
 
             option = input("Opción: ")
 
             if self.handle_common_options(option):
                 continue
-            elif option == "3":
-                self.show_appointments()
-            elif option == "4":
-                self.add_availability()
             elif option == "5":
-                self.edit_availability()
+                self.show_appointments()
             elif option == "6":
-                self.remove_availability()
+                self.add_availability()
             elif option == "7":
-                self.list_availability()
+                self.edit_availability()
             elif option == "8":
+                self.remove_availability()
+            elif option == "9":
+                self.list_availability()
+            elif option == "10":
                 self.update_doctor_data()
             elif option == "0":
                 print("Sesión cerrada.\n")

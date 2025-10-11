@@ -43,7 +43,7 @@ class UserDAO:
                         "INSERT INTO Doctors (user_id, specialty, accepts_medical_insurance, license_number) "
                         "VALUES (%s, %s, %s, %s)"
                     )
-                cursor.execute(
+                    cursor.execute(
                     query_doctor,
                     (
                         created_user.user_id,
@@ -140,6 +140,7 @@ class UserDAO:
                         role=role_enum,
                         date_of_birth=row["date_of_birth"]
                     )
+                    user.user_id = row.get("id")
                     user.enabled = row.get("enabled", True)
                     users.append(user)
             return users

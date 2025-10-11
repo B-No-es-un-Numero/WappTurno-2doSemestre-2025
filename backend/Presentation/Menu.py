@@ -457,27 +457,6 @@ class Menu():
                     print(f"\nTotal: {len(data)} turnos")
                     print("="*60 + "\n")
 
-            #CODIGO DE ANTES
-             #Solo paciente (Fullstack requirement for sprint 2)
-            # elif option == "16":
-            #     if (self.current_user == None):
-            #         print("Error, debe iniciar sesión primero! \n")
-            #         continue
-            #     searched_id = None
-            #     is_doctor = False
-            #     if (self.current_user.role == RoleEnum.ADMIN):
-            #         searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-            #         is_doctor_input = input("¿Es profesional médico? (s/n): ").lower()
-            #         is_doctor = is_doctor_input == "s"
-            #     else:
-            #         searched_id = self.current_user.user_id
-            #         if (self.current_user.role == RoleEnum.DOCTOR):
-            #             is_doctor = True
-            #     data = self._appointment_service.get_all_appointments_by_user_id(searched_id, is_doctor)
-            #     if not data:
-            #         print("No hay turnos registrados para el usuario. \n")
-            #     else:
-            #         print(f"Lista de turnos del usuario: {data} \n")
 
             #Solo paciente (Fullstack requirement for sprint 2)
             elif option == "17":
