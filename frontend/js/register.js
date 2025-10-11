@@ -5,20 +5,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const alertContainer = document.getElementById("alertContainer");
 
   form.addEventListener("submit", (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
 
-    
+
     alertContainer.innerHTML = "";
+
+    const dni = document.getElementById("dni");
+
+    const dniValue = parseInt(dni.value);
+    if (dniValue < 1000000 || dniValue > 99999999 || isNaN(dniValue)) {
+      showAlert("El DNI debe estar entre 1.000.000 y 99.999.999.", "danger");
+      return;
+    }
 
     if (password.value !== confirmPassword.value) {
       showAlert("Las contraseñas no coinciden.", "danger");
-      return; 
+      return;
     }
 
-    
+
     showAlert("Registro exitoso. Redirigiendo al login...", "success");
 
-    
+
     setTimeout(() => {
       window.location.href = "login.html";
     }, 2000);
