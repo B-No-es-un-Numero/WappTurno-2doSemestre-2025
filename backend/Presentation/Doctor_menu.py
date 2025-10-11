@@ -5,37 +5,36 @@ from Models.TimeFrame_enum import TimeFrameEnum
 
 class DoctorMenu(BaseUserMenu):
     def __init__(self, user_service, availability_service, appointment_service, user):
-        super().__init__(user_service, user)
+        super().__init__(user_service, user, appointment_service)
         self._availability_service = availability_service
-        self._appointment_service = appointment_service
 
     def run(self):
         while True:
             print("\n--- MENÚ DOCTOR ---")
             self.show_common_options()
-            print("3. Ver mis turnero")
-            print("4. Crear horario de disponibilidad")
-            print("5. Editar horario")
-            print("6. Eliminar horario")
-            print("7. Mostrar horarios")
-            print("8. Editar datos profesionales")
+            print("5. Ver mis turnero")
+            print("6. Crear horario de disponibilidad")
+            print("7. Editar horario")
+            print("8. Eliminar horario")
+            print("9. Mostrar horarios")
+            print("10. Editar datos profesionales")
             print("0. Cerrar sesión")
 
             option = input("Opción: ")
 
             if self.handle_common_options(option):
                 continue
-            elif option == "3":
-                self.show_appointments()
-            elif option == "4":
-                self.add_availability()
             elif option == "5":
-                self.edit_availability()
+                self.show_appointments()
             elif option == "6":
-                self.remove_availability()
+                self.add_availability()
             elif option == "7":
-                self.list_availability()
+                self.edit_availability()
             elif option == "8":
+                self.remove_availability()
+            elif option == "9":
+                self.list_availability()
+            elif option == "10":
                 self.update_doctor_data()
             elif option == "0":
                 print("Sesión cerrada.\n")
@@ -48,9 +47,17 @@ class DoctorMenu(BaseUserMenu):
         data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
         if not data:
             print("No hay turnos registrados.\n")
-        else:
-            for appointment in data:
-                print(f"- {appointment}")
+            return
+        print("\n=== TURNERO DEL PROFESIONAL DE SALUD ===\n")
+        for idx, appointment in enumerate(data, start=1):
+            print(f"Turno #{idx}")
+            print(f"ID Turno:         {appointment.appointment_id}")
+            print(f"Fecha y hora:     {appointment.date_and_time}")
+            print(f"Estado:           {appointment.state.value}")
+            print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+            print(f"Paciente:         {appointment.patient_info}")
+            print(f"Consulta:         {appointment.consultation_name}")
+            print("-" * 50)
 
 
     def add_availability(self):
@@ -96,9 +103,21 @@ class DoctorMenu(BaseUserMenu):
         data = self._availability_service.get_all_by_doctor_id(self.user.user_id)
         if not data:
             print("No hay horarios para el profesional.\n")
-        else:
-            for a in data:
-                print(f"- {a}")
+
+        days_order = ["LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES",
+                       "SABADO", "DOMINGO"]
+        timeframes_order = ["MAÑANA", "TARDE", "NOCHE"]
+
+        data.sort(
+        key=lambda a: (
+            days_order.index(a.days),
+            timeframes_order.index(a.time_frame)
+            )
+        )   
+
+        print(f"Horarios laborales del profesional: {self.user.name} {self.user.surname}.\n")
+        for a in data:
+            print(f"ID: {a.id} | Día: {a.days} | Horario: {a.time_frame}")
 
 
     def update_doctor_data(self):

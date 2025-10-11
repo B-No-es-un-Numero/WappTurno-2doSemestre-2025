@@ -4,42 +4,44 @@ from Models.Role_enum import RoleEnum
 
 class AdminMenu(BaseUserMenu):
     def __init__(self, user_service, appointment_service, user):
-        super().__init__(user_service, user)
+        super().__init__(user_service, user, appointment_service)
         self._user_service = user_service
-        self._appointment_service = appointment_service
 
 
     def run(self):
         while True:
             print("\n--- MENÚ ADMIN ---")
             self.show_common_options()
-            print("3. Listar usuarios")
-            print("4. Listar usuarios por rol")
-            print("5. Buscar usuario por ID")
-            print("6. Buscar usuario por email")
-            print("7. Cambiar rol de usuario")
-            print("8. Eliminar usuario definitivamente")
-            print("9. Mostrar turnos de un usuario")
+            print("5. Listar usuarios")
+            print("6. Listar usuarios por rol")
+            print("7. Buscar usuario por ID")
+            print("8. Buscar usuario por email")
+            print("9. Cambiar rol de usuario")
+            print("10. Eliminar usuario definitivamente")
+            print("11. Mostrar turnos de un usuario")
+            print("12. Eliminar turno de un usuario")
             print("0. Cerrar sesión")
 
             option = input("Opción: ")
 
             if self.handle_common_options(option):
                 continue
-            elif option == "3":
-                self.list_users()
-            elif option == "4":
-                self.list_users_by_role()
             elif option == "5":
-                self.find_user_by_id()
+                self.list_users()
             elif option == "6":
-                self.find_user_by_email()
+                self.list_users_by_role()
             elif option == "7":
-                self.change_role()
+                self.find_user_by_id()
             elif option == "8":
-                self.delete_user()
+                self.find_user_by_email()
             elif option == "9":
+                self.change_role()
+            elif option == "10":
+                self.delete_user()
+            elif option == "11":
                 self.show_appointments()
+            elif option == "12":
+                self.delete_appointment()
             elif option == "0":
                 print("Sesión cerrada.\n")
                 break
@@ -50,7 +52,7 @@ class AdminMenu(BaseUserMenu):
     def list_users(self):
         users = self._user_service.get_all_users()
         for u in users or []:
-            print(f"- {u.name} {u.surname} ({u.role.value})")
+            print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
 
 
     def list_users_by_role(self):
@@ -92,12 +94,60 @@ class AdminMenu(BaseUserMenu):
 
 
     def show_appointments(self):
+        users = self._user_service.get_all_users()
+        for u in users or []:
+            print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
         searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
-        is_doctor_input = input("¿Es profesional médico? (s/n): ").lower()
-        is_doctor = is_doctor_input == "s"
-        data = self._appointment_service.get_all_appointments_by_user_id(searched_id, is_doctor)
+        data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         if not data:
             print("No hay turnos registrados.\n")
+            return
+        print("\n=== TURNOS ===\n")
+        for idx, appointment in enumerate(data, start=1):
+            print(f"Turno #{idx}")
+            print(f"ID Turno:         {appointment.appointment_id}")
+            print(f"Fecha y hora:     {appointment.date_and_time}")
+            print(f"Estado:           {appointment.state.value}")
+            print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+            print(f"Paciente:         {appointment.patient_info}")
+            print(f"Médico:           {appointment.doctor_info}")
+            print(f"Especialidad:     {appointment.specialty}")
+            print(f"Consulta:         {appointment.consultation_name}")
+            print(f"Habilitado:       {'Sí' if appointment.enabled else 'No'}")
+            print("-" * 50)
+
+
+    def delete_appointment(self):
+        users = self._user_service.get_all_users()
+        for u in users or []:
+            print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
+        searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
+        data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
+        if not data:
+            print("No hay turnos registrados.\n")
+            return False
         else:
-            for appointment in data:
-                print(f"- {appointment}")
+            print("\n=== TURNOS ===\n")
+            for idx, appointment in enumerate(data, start=1):
+                print(f"Turno #{idx}")
+                print(f"ID Turno:         {appointment.appointment_id}")
+                print(f"Fecha y hora:     {appointment.date_and_time}")
+                print(f"Estado:           {appointment.state.value}")
+                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+                print(f"Paciente:         {appointment.patient_info}")
+                print(f"Médico:           {appointment.doctor_info}")
+                print(f"Especialidad:     {appointment.specialty}")
+                print(f"Consulta:         {appointment.consultation_name}")
+                print(f"Habilitado:       {'Sí' if appointment.enabled else 'No'}")
+                print("-" * 50)
+        appointment_id = input("Ingrese el ID del turno a eliminar: ")
+        
+        confirm = input("Confirma eliminación definitiva del turno? (s/n): ").lower()
+        if confirm == "s":
+            success = self._appointment_service.delete_appointment(appointment_id)
+            if success:
+                print("Turno eliminado exitosamente.\n")
+            else:
+                print("No se pudo eliminar el turno. Recuerde cancelarlo previamente.\n")
+        else:
+            print("Operación cancelada.\n")

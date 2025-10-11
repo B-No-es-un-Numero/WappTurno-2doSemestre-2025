@@ -1,4 +1,5 @@
 from Models.Appointment import Appointment
+from Models.Medical_consultation import Medical_consultation
 from Models.Appointment_state_enum import AppointmentStateEnum
 from Models.Days_enum import DaysEnum
 from Models.TimeFrame_enum import TimeFrameEnum
@@ -40,7 +41,7 @@ class AppointmentService:
         
 
     def reschedule_appointment(self, appointment_id: str, new_date: datetime):
-            previous_appointment = self._appointment_dao.get_appointment_by_id(appointment_id, False)
+            previous_appointment = self._appointment_dao.get_appointment_by_id(appointment_id)
 
             if not self._validate_appointment_data(new_date, previous_appointment.user_id, 
                         previous_appointment.doctor_id,
@@ -55,9 +56,9 @@ class AppointmentService:
 
 
     def delete_appointment(self, appointment_id: str) -> bool:
-        self._appointment_dao.get_appointment_by_id(appointment_id, False)
+        appointment = self._appointment_dao.get_appointment_by_id(appointment_id)
 
-        if not self.update_state(appointment_id, AppointmentStateEnum.CANCELLED):
+        if (appointment.state != AppointmentStateEnum.CANCELLED):
             return False
             
         self._appointment_dao.delete_appointment(appointment_id)
@@ -103,22 +104,28 @@ class AppointmentService:
 
 
     def get_appointment_by_id(self, appointment_id: str) -> Appointment:
-        appointment = self._appointment_dao.get_appointment_by_id(appointment_id)
+        appointment = self._appointment_dao.get_appointment_by_id(appointment_id, False)
         if appointment is None:
             print("No se encontró el turno buscado. \n")
             return None
         return appointment
     
     
-    def get_all_appointments_by_user_id(self, user_id: str, 
-                                is_doctor: bool) -> list['Appointment']:
-        appointment_list = self._appointment_dao.get_all_appointments_by_user_id(user_id, is_doctor)
+    def get_all_appointments_by_user_id(self, user_id: str, close: bool = True) -> list['Appointment']:
+        appointment_list = self._appointment_dao.get_all_appointments_by_user_id(user_id, close)
         if not appointment_list:
-            print("No se encontraron turnos para este usuario. \n")
             return None
         return appointment_list
     
     
+    def get_all_medical_consultations(self) -> list['Medical_consultation']:
+        medical_consultation_list = self._appointment_dao.get_all_medical_consultations()
+        if not medical_consultation_list:
+            print("Error: No se encontraron prestaciones médicas. \n")
+            return None
+        return medical_consultation_list
+
+
     def _validate_appointment_data(self, date_and_time: datetime, user_id: str, 
                                   doctor_id: str, medical_consultation_id: str):
         
@@ -131,8 +138,8 @@ class AppointmentService:
             return False
         
         if self._appointment_dao.check_time_conflict(user_id, doctor_id, date_and_time):
-            print(f"""Error: Uno de los usuarios ya tiene un turno a las 
-                  {date_and_time.strftime('%H:%M')}. Recuerde que los turnos son de 1 hora.""")
+            print(f"""Error: Uno de los usuarios ya tiene un turno a las {date_and_time.strftime('%H:%M')}.
+                  Recuerde que los turnos son de 1 hora.""")
             return False
         
         self._validate_date_with_doctor_availability(doctor_id, date_and_time)
@@ -151,7 +158,7 @@ class AppointmentService:
             (date_and_time.weekday() == 5 and availability.days == DaysEnum.SABADO) or \
             (date_and_time.weekday() == 6 and availability.days == DaysEnum.DOMINGO):
                 hour = date_and_time.hour
-                timeframe = availability.timeframe
+                timeframe = availability.time_frame
                 if timeframe == TimeFrameEnum.MAÑANA and 6 <= hour < 12:
                     return True
                 elif timeframe == TimeFrameEnum.TARDE and 12 <= hour < 18:

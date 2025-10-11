@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Obtener elementos del DOM (usando los IDs que añadimos en el HTML)
+    // 1. Obtener elementos del DOM
     const form = document.getElementById('contact-form');
     // Si el formulario existe en la página, iniciamos la lógica.
     if (!form) return; 
@@ -12,74 +12,73 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Expresión Regular para validar el formato del email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    // Lista para acumular los errores
+    let currentErrors = [];
 
     function validateField(input, isEmail = false) {
         const value = input.value.trim();
         let error = '';
+        
+        // Asignamos un nombre amigable al campo para el mensaje de error (¡Corrección clave!)
+        const fieldName = input.id === 'name' ? 'Nombre' : 
+                          input.id === 'email' ? 'Correo electrónico' : 
+                          'Mensaje'; 
 
-        // Validar campo obligatorio (No vacío)
+        // 1. Validar campo obligatorio (No vacío)
         if (value === '') {
-            error = `El campo ${input.placeholder.split(' ')[0]} es obligatorio.`;
+            error = `El campo ${fieldName} es obligatorio.`;
         } 
         
-        // Si es el campo email, validar el formato
+        // 2. Si es el campo email, validar el formato
         else if (isEmail && !emailRegex.test(value)) {
-            error = "El formato del Email es inválido.";
+            error = "El formato del Correo electrónico es inválido.";
         }
         
-        // Mostrar o remover la clase 'is-invalid' de Bootstrap
+        // Aplicar estilos de Bootstrap (rojo si es inválido, verde si es válido)
         if (error) {
             input.classList.add('is-invalid');
             input.classList.remove('is-valid');
         } else {
             input.classList.remove('is-invalid');
-            input.classList.add('is-valid');
+            input.classList.add('is-valid'); 
         }
 
         return error;
     }
 
     function validateForm() {
-        let errors = [];
+        currentErrors = []; // Limpiar errores en cada re-evaluación
 
         // Validar cada campo
         const nameError = validateField(nameInput);
-        if (nameError) errors.push(nameError);
+        if (nameError) currentErrors.push(nameError);
 
-        const emailError = validateField(emailInput, true); // true para validar formato email
-        if (emailError) errors.push(emailError);
+        const emailError = validateField(emailInput, true); 
+        if (emailError) currentErrors.push(emailError);
 
         const messageError = validateField(messageInput);
-        if (messageError) errors.push(messageError);
+        if (messageError) currentErrors.push(messageError);
         
-        const isValid = errors.length === 0;
+        const isValid = currentErrors.length === 0;
 
-        // Mostrar Feedback de Errores
-        if (errors.length > 0) {
-            feedbackDiv.innerHTML = '<ul>' + errors.map(e => `<li>${e}</li>`).join('') + '</ul>';
+        // Mostrar Feedback de Errores (usando lista de Bootstrap)
+        if (currentErrors.length > 0) {
+            // Unir errores en una lista HTML para mejor visualización
+            feedbackDiv.innerHTML = '<ul class="list-unstyled mb-0">' + currentErrors.map(e => `<li><i class="bi bi-x-circle-fill me-2"></i>${e}</li>`).join('') + '</ul>';
         } else {
             feedbackDiv.innerHTML = ''; // Limpiar errores
         }
 
-        // Criterio de Aceptación: Si todo está correcto, se habilita el botón de envío.
+        // Criterio de Aceptación: Deshabilitar/Habilitar el botón.
         submitButton.disabled = !isValid;
-        
-        // Si hay errores, deshabilitar el botón forzosamente (aunque el usuario no haya escrito nada aún)
-        if (!isValid) {
-            submitButton.classList.add('disabled', 'opacity-75');
-        } else {
-             submitButton.classList.remove('disabled', 'opacity-75');
-        }
-
-        return isValid;
     }
 
     // Escuchar eventos de entrada en todos los campos para validar dinámicamente
-    // Cada vez que el usuario escriba, se re-evalúa el formulario.
     nameInput.addEventListener('input', validateForm);
     emailInput.addEventListener('input', validateForm);
     messageInput.addEventListener('input', validateForm);
     
-    // Ejecutar la validación una vez al cargar la página para que el botón esté deshabilitado inicialmente.
+    // Ejecutar la validación una vez al cargar la página (¡Clave para el estado inicial!)
     validateForm();
 });

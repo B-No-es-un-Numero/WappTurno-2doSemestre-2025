@@ -1,10 +1,11 @@
 import uuid
 
 class Medical_consultation:
-    def __init__(self, name: str, code: str):
-        self.id = str(uuid.uuid4()) 
+    def __init__(self, name: str, code: str, id: str = None):
+        self.id = id if id is not None else str(uuid.uuid4())
         self.name = name
         self.code = code
+
 
     def __str__(self):
         return f"Medical_consultation(id={self.id}, name={self.name}, code={self.code})"
