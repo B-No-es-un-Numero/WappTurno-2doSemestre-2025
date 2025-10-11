@@ -69,10 +69,8 @@ class UserService:
         if data is None:
             return None
         if data.password == password:
-            print(f"Acceso permitido! Hola {data.name}! \n")
             return data
         else:
-            print("Acceso denegado, contraseña incorrecta. \n")
             return None
 
     def get_user_by_id(self, user_id: str) -> 'User':

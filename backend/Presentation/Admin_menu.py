@@ -19,7 +19,7 @@ class AdminMenu(BaseUserMenu):
             print("9. Cambiar rol de usuario")
             print("10. Eliminar usuario definitivamente")
             print("11. Mostrar turnos de un usuario")
-            print("12. Eliminar turno")
+            print("12. Eliminar turno de un usuario")
             print("0. Cerrar sesión")
 
             option = input("Opción: ")
@@ -102,7 +102,7 @@ class AdminMenu(BaseUserMenu):
         if not data:
             print("No hay turnos registrados.\n")
             return
-        print("\n=== TURNOS (ADMINISTRADOR) ===\n")
+        print("\n=== TURNOS ===\n")
         for idx, appointment in enumerate(data, start=1):
             print(f"Turno #{idx}")
             print(f"ID Turno:         {appointment.appointment_id}")
@@ -127,8 +127,19 @@ class AdminMenu(BaseUserMenu):
             print("No hay turnos registrados.\n")
             return False
         else:
-            for appointment in data:
-                print(f"- {appointment}")
+            print("\n=== TURNOS ===\n")
+            for idx, appointment in enumerate(data, start=1):
+                print(f"Turno #{idx}")
+                print(f"ID Turno:         {appointment.appointment_id}")
+                print(f"Fecha y hora:     {appointment.date_and_time}")
+                print(f"Estado:           {appointment.state.value}")
+                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+                print(f"Paciente:         {appointment.patient_info}")
+                print(f"Médico:           {appointment.doctor_info}")
+                print(f"Especialidad:     {appointment.specialty}")
+                print(f"Consulta:         {appointment.consultation_name}")
+                print(f"Habilitado:       {'Sí' if appointment.enabled else 'No'}")
+                print("-" * 50)
         appointment_id = input("Ingrese el ID del turno a eliminar: ")
         
         confirm = input("Confirma eliminación definitiva del turno? (s/n): ").lower()
@@ -137,6 +148,6 @@ class AdminMenu(BaseUserMenu):
             if success:
                 print("Turno eliminado exitosamente.\n")
             else:
-                print("No se pudo eliminar el turno.\n")
+                print("No se pudo eliminar el turno. Recuerde cancelarlo previamente.\n")
         else:
             print("Operación cancelada.\n")

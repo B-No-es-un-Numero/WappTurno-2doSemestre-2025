@@ -114,7 +114,6 @@ class AppointmentService:
     def get_all_appointments_by_user_id(self, user_id: str, close: bool = True) -> list['Appointment']:
         appointment_list = self._appointment_dao.get_all_appointments_by_user_id(user_id, close)
         if not appointment_list:
-            print("No se encontraron turnos para este usuario. \n")
             return None
         return appointment_list
     

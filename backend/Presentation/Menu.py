@@ -90,7 +90,8 @@ class Menu:
         password = input("Contraseña: ")
         self.current_user = self._user_service.login(email, password)
         if not self.current_user:
-            print("Credenciales inválidas.\n")
+            print("\nEmail o contraseña incorrectos. Intente nuevamente.\n")
+            return
 
     def run_role_menu(self):
         role = self.current_user.role
