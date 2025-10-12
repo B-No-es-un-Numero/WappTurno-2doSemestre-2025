@@ -1,17 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WappTurno</title>
   <meta name="description" content="Contáctanos para cualquier consulta sobre WappTurno, nuestro sistema de reservas médicas online. Envíanos un mensaje ahora.">
-
-  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
     crossorigin="anonymous">
-
-  <!-- Iconos  -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
@@ -50,8 +46,8 @@
                 class="bi bi-person-circle"></i> Mi Cuenta </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li><a class="dropdown-item" href="my-appointments.html">Mis turnos</a></li>
-              <li><a class="dropdown-item" href="dashboard.html">Panel principal</a></li>
-              <li><a class="dropdown-item" href="profile.html">Mi Perfil</a></li>
+              <li><a class="dropdown-item" href="#">Panel principal</a></li>
+              <li><a class="dropdown-item" href="@">Mi Perfil</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -62,8 +58,6 @@
       </div>
     </div>
   </nav>
-
-  <!-- Contacto -->
   <main class="flex-grow-1">
     <section class="py-5">
       <div class="container">
@@ -75,15 +69,15 @@
             <form id="contact-form" action="https://formsubmit.co/galinoalvaro@gmail.com" method="POST">
               <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre completo">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre completo" required>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com">
+                <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
               </div>
               <div class="mb-3">
                 <label for="message" class="form-label">Mensaje</label>
-                <textarea class="form-control" id="message" name="message" rows="4"
+                <textarea class="form-control" id="message" name="message" rows="4" required
                   placeholder="Escribe tu mensaje aquí..."></textarea>
               </div>
                 <div class="mb-3" id="validation-feedback" style="color: red;"></div>
@@ -101,25 +95,23 @@
     </section>
   </main>
 
-  <!-- Footer -->
   <footer class="bg-light text-center py-3 mt-auto border-top">
     <p class="mb-0 text-secondary">&copy; 2025 - WappTurno - B no es un número</p>
   </footer>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
 
-  <!-- JS -->
   <script src="../js/nav.js"></script>
   <script src="../js/contact.js"></script>
   <script>
     const logoutBtn = document.getElementById("logoutBtn");
-
-    logoutBtn.addEventListener("click", () => {
-      localStorage.removeItem("login");
-      window.location.href = "../index.html";
-    });
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("login");
+        window.location.href = "../index.html";
+      });
+    }
   </script>
 </body>
 

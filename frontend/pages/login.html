@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
@@ -29,14 +29,14 @@
               <form id="loginForm" novalidate>
                 <div class="mb-3">
                   <label for="email" class="form-label fw-bold">Email</label>
-                  <input type="email" class="form-control" id="email" value="" placeholder="tuemail@ejemplo.com"
+                  <input type="email" name="email" class="form-control" id="email" value="" placeholder="tuemail@ejemplo.com"
                     required>
                   <div class="invalid-feedback">Por favor, ingresa un correo electrónico válido.</div>
                 </div>
 
                 <div class="mb-1">
                   <label for="password" class="form-label fw-bold">Contraseña</label>
-                  <input type="password" class="form-control" id="password" value="" placeholder="******" required
+                  <input type="password" name="password" class="form-control" id="password" value="" placeholder="******" required
                     minlength="6" maxlength="6">
                   <div class="invalid-feedback">La contraseña debe tener 6 caracteres e incluir números y letras.</div>
                 </div>
@@ -78,7 +78,7 @@
     crossorigin="anonymous"></script>
 
   <!-- JS -->
-  <script src="../js/login.js"></script>
+  <script src="../js/login.js" defer></script>
 </body>
 
 </html>
