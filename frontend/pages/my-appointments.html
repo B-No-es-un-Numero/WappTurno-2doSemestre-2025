@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -26,9 +26,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="./pages/login.html">Ingresar</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./pages/services.html">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="./pages/contact.html">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./login.html">Ingresar</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./services.html">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="./contact.html">Contacto</a></li>
                 </ul>
             </div>
         </div>
@@ -49,8 +49,8 @@
                                 class="bi bi-person-circle"></i> Mi Cuenta </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="my-appointments.html">Mis turnos</a></li>
-                            <li><a class="dropdown-item" href="dashboard.html">Panel principal</a></li>
-                            <li><a class="dropdown-item" href="profile.html">Mi Perfil</a></li>
+                            <li><a class="dropdown-item" href="#">Panel principal</a></li>
+                            <li><a class="dropdown-item" href="@">Mi Perfil</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -148,11 +148,12 @@
     <script src="../js/nav.js"></script>
     <script>
         const logoutBtn = document.getElementById("logoutBtn");
-
-        logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("login");
-            window.location.href = "../index.html";
-        });
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", () => {
+                    localStorage.removeItem("login");
+                    window.location.href = "../index.html";
+                });
+            }
     </script>
 </body>
 
