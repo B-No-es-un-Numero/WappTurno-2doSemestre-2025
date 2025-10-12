@@ -1,6 +1,7 @@
-from Role_enum import RoleEnum
-from User import User
-from connection_mysql import connection_mysql
+from Models.Role_enum import RoleEnum
+from Models.Doctor import Doctor
+from Models.User import User
+from DAO.connection_mysql import connection_mysql
 import mysql.connector
 
 class UserDAO: 
@@ -13,27 +14,50 @@ class UserDAO:
             pass
         self.__connection = connection_mysql().create_connection()
 
+
     def register_user(self, created_user: User):
         try:
             self.open_connection()
             with self.__connection.cursor() as cursor:
-                query= ("INSERT INTO Users (user_id, name, surname, "
-                    "dni, email, password, phone_number, role, date_of_birth, enabled) "
-                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)")
-                cursor.execute(query, (created_user.user_id, 
-                                       created_user.name, 
-                                       created_user.surname,
-                                       created_user.dni,
-                                       created_user.email,
-                                       created_user.password,
-                                       created_user.phone_number,
-                                       created_user.role,
-                                       created_user.date_of_birth,
-                                       created_user.enabled))
-                self.__connection.commit()
+                query_user = (
+                "INSERT INTO Users (id, name, surname, dni, email, password, phone_number, role, date_of_birth, enabled) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                )
+                cursor.execute(
+                query_user,
+                (
+                    created_user.user_id,
+                    created_user.name,
+                    created_user.surname,
+                    created_user.dni,
+                    created_user.email,
+                    created_user.password,
+                    created_user.phone_number,
+                    created_user.role.name,
+                    created_user.date_of_birth,
+                    created_user.enabled,
+                ),
+            )   
+                if (created_user.role.name == "DOCTOR"):
+                    query_doctor = (
+                        "INSERT INTO Doctors (user_id, specialty, accepts_medical_insurance, license_number) "
+                        "VALUES (%s, %s, %s, %s)"
+                    )
+                    cursor.execute(
+                    query_doctor,
+                    (
+                        created_user.user_id,
+                        created_user.specialty,
+                        created_user.accepts_medical_insurance,
+                        created_user.license_number,
+                    ),
+                )   
+            self.__connection.commit()  
         except mysql.connector.Error as error:
-            raise Exception(f"Error al insertar: {error}")
-        finally: self.__connection.close()
+            self.__connection.rollback()
+            raise Exception(f"Error al insertar en la base de datos: {error}") 
+        finally:        
+            self.__connection.close()  
         return created_user
         
 
@@ -41,7 +65,7 @@ class UserDAO:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query = "SELECT * FROM Users WHERE user_id = %s AND enabled = TRUE"
+                query = "SELECT * FROM Users WHERE id = %s AND enabled = TRUE"
                 cursor.execute(query, (user_id,))
                 row = cursor.fetchone()
                 if row:
@@ -63,8 +87,8 @@ class UserDAO:
             raise Exception(f"Error al buscar usuario por ID: {error}")
         finally:
             self.__connection.close()
-        
-    
+
+
     def get_user_by_email(self, user_email: str, close: bool = True) -> User | None:
         try:
             self.open_connection()
@@ -84,6 +108,7 @@ class UserDAO:
                         role=role_enum,
                         date_of_birth=row["date_of_birth"]
                     )
+                    user.user_id = row.get("id")
                     user.enabled = row.get("enabled", True)
                     return user
             return None
@@ -92,6 +117,7 @@ class UserDAO:
         finally:
             if close:
                 self.__connection.close()
+
 
     def get_all_users(self) -> list['User']:
         try:
@@ -114,6 +140,7 @@ class UserDAO:
                         role=role_enum,
                         date_of_birth=row["date_of_birth"]
                     )
+                    user.user_id = row.get("id")
                     user.enabled = row.get("enabled", True)
                     users.append(user)
             return users
@@ -122,7 +149,7 @@ class UserDAO:
         finally: self.__connection.close()
 
 
-    def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
+    def get_all_users_by_role2(self, role: RoleEnum) -> list['User']:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
@@ -149,36 +176,64 @@ class UserDAO:
             raise Exception(f"Error al buscar usuarios por rol: {error}")
         finally:
             self.__connection.close()
-
-    #No usado hasta que no agreguemos las otras clases y services.
-    def get_all_doctor(self,):
+ 
+    def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("SELECT * FROM Users WHERE role = 'doctor' AND enabled = TRUE")
-                cursor.execute(query, ())
+                query = """
+                    SELECT 
+                        u.*,
+                        d.specialty,
+                        d.accepts_medical_insurance,
+                        d.license_number
+                    FROM Users u
+                    LEFT JOIN Doctors d ON u.id = d.user_id
+                    WHERE u.role = %s AND u.enabled = TRUE
+                """
+                cursor.execute(query, (role.value,))
                 rows = cursor.fetchall()
                 users = []
-
-                for row in rows:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.enabled = row.get("enabled", True)
-                    users.append(user)
-            return users
-        except mysql.connector.Error as error:
-            raise Exception(f"Error al buscar doctores: {error}")
-        finally: self.__connection.close()
     
+                for row in rows:
+                    if row.get("specialty") is not None:
+                        doctor = Doctor(
+                            name=row["name"],
+                            surname=row["surname"],
+                            dni=row["dni"],
+                            email=row["email"],
+                            password=row["password"],
+                            phone_number=row["phone_number"],
+                            date_of_birth=row["date_of_birth"],
+                            specialty=row["specialty"],
+                            accepts_medical_insurance=row["accepts_medical_insurance"],
+                            license_number=row["license_number"]
+                        )
+                        doctor.user_id = row["id"]
+                        doctor.enabled = row.get("enabled", True)
+                        users.append(doctor)
+                    else:
+                        user = User(
+                            name=row["name"],
+                            surname=row["surname"],
+                            dni=row["dni"],
+                            email=row["email"],
+                            password=row["password"],
+                            phone_number=row["phone_number"],
+                            role=RoleEnum(row["role"]),
+                            date_of_birth=row["date_of_birth"]
+                        )
+                        user.user_id = row["id"]
+                        user.enabled = row.get("enabled", True)
+                        users.append(user)
+    
+                return users
+    
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al buscar usuarios por rol: {error}")
+        finally:
+            self.__connection.close()
+
 
     def update_user(self, name: str, surname: str, dni: int,
                     email: str, password: str, phone_number: int) -> User | None:
@@ -239,6 +294,7 @@ class UserDAO:
             raise Exception(f"Error al deshabilitar el usuario: {error}")
         finally: self.__connection.close()
     
+
     def delete_account(self, email: str) -> bool:
         try:
             self.open_connection()
@@ -249,4 +305,43 @@ class UserDAO:
                 return cursor.rowcount > 0
         except mysql.connector.Error as error:
             raise Exception(f"Error al eliminar permanentemente el usuario: {error}")
+        finally: self.__connection.close()
+
+
+    def update_doctor(self, doctor_id: str, specialty: str, accepts_medical_insurence: bool,
+                              license_number: int) -> Doctor | None:
+        try:
+            self.open_connection()
+            with self.__connection.cursor(dictionary=True) as cursor:
+                query= ("UPDATE Doctors SET specialty = %s, accepts_medical_insurance = %s,"
+                "license_number = %s WHERE user_id = %s")
+                cursor.execute(query, (specialty, accepts_medical_insurence,
+                                       license_number, doctor_id))
+                self.__connection.commit()
+                if cursor.rowcount == 0:
+                    return None
+
+                cursor.execute("SELECT * FROM Users " \
+                "JOIN Doctors ON Users.id = Doctors.user_id " \
+                "WHERE id = %s", (doctor_id,))
+                row = cursor.fetchone()
+                if row:
+                    doctor = Doctor(
+                        name=row["name"],
+                        surname=row["surname"],
+                        dni=row["dni"],
+                        email=row["email"],
+                        password=row["password"],
+                        phone_number=row["phone_number"],
+                        date_of_birth=row["date_of_birth"],
+                        specialty=row["specialty"],
+                        accepts_medical_insurance=row["accepts_medical_insurance"],
+                        license_number=row["license_number"],
+                    )
+                    doctor.enabled = row["enabled"]
+                    doctor.user_id = row["user_id"]
+                    return doctor
+            
+        except mysql.connector.Error as error:
+            raise Exception(f"Error al insertar: {error}")
         finally: self.__connection.close()
