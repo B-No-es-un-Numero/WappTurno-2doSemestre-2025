@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const feedbackDiv = document.getElementById('validation-feedback');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     let currentErrors = [];
 
     function validateField(input, isEmail = false) {
@@ -27,15 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
         else if (isEmail && !emailRegex.test(value)) {
             error = "El formato del Correo electrónico es inválido.";
         }
-
-        if (error) {
-            input.classList.add('is-invalid');
-            input.classList.remove('is-valid');
-        } else {
-            input.classList.remove('is-invalid');
-            input.classList.add('is-valid');
+        if (input.touched) {
+            if (error) {
+                input.classList.add('is-invalid');
+                input.classList.remove('is-valid');
+            } else {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            }
         }
-
         return error;
     }
 
@@ -52,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (messageError) currentErrors.push(messageError);
 
         const isValid = currentErrors.length === 0;
+
         if (currentErrors.length > 0) {
             feedbackDiv.innerHTML = '<ul class="list-unstyled mb-0">' + currentErrors.map(e => `<li><i class="bi bi-x-circle-fill me-2"></i>${e}</li>`).join('') + '</ul>';
         } else {
@@ -73,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     submitButton.disabled = true;
-    // ✅ Nuevo: mostrar mensaje de éxito
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Evita el envío automático
 
@@ -94,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     feedbackDiv.innerHTML =
                         '<div class="alert alert-success mt-3" role="alert">' +
                         '<i class="bi bi-check-circle-fill me-2"></i>' +
-                        '¡El mensaje fue enviado correctamente!' +
+                        '¡El mensaje fue enviado correctamente! A la brevedad nos contactaremos contigo' +
                         '</div>';
 
                     feedbackDiv.style.color = 'green';
@@ -120,6 +119,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-
-
 });
