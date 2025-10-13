@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WappTurno</title>
+  <meta name="description" content="Contáctanos para cualquier consulta sobre WappTurno, nuestro sistema de reservas médicas online. Envíanos un mensaje ahora.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar public -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" id="navPublic">
+    <div class="container"> <a class="navbar-brand fw-bold text-primary" href="../index.html"> <i
+          class="bi bi-calendar-check"></i> WappTurno </a> <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="./login.html">Ingresar</a></li>
+          <li class="nav-item"><a class="nav-link" href="./services.html">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="./about.html">Quiénes Somos</a></li>
+          <li class="nav-item"><a class="nav-link active" href="./contact.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Navbar private -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" id="navPrivate">
+    <div class="container"> <a class="navbar-brand fw-bold text-primary" href="../index.html"> <i
+          class="bi bi-calendar-check"></i> WappTurno </a> <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav2">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="services.html">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link" href="./about.html">Quiénes Somos</a></li>
+          <li class="nav-item"><a class="nav-link active" href="contact.html">Contacto</a></li>
+          <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle active" aria-current="page" href="#"
+              id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i
+                class="bi bi-person-circle"></i> Mi Cuenta </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="my-appointments.html">Mis turnos</a></li>
+              <li><a class="dropdown-item" href="#">Panel principal</a></li>
+              <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <main class="flex-grow-1">
+    <section class="py-5">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6">
+            <h2 class="text-center mb-4 text-primary">
+              <i class="bi bi-envelope-fill"></i> Contáctanos
+            </h2>
+            <form id="contact-form" action="https://formsubmit.co/bnan.developer@gmail.com" method="POST">
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre completo" required>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
+              </div>
+              <div class="mb-3">
+                <label for="message" class="form-label">Mensaje</label>
+                <textarea class="form-control" id="message" name="message" rows="4" required
+                  placeholder="Escribe tu mensaje aquí..."></textarea>
+              </div>
+                <div class="mb-3" id="validation-feedback" style="color: red;"></div>
+                <input type="hidden" name="_subject" value="Nuevo Mensaje de Contacto - WappTurno">
+                <input type="hidden" name="_captcha" value="false">
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary" id="submit-button" disabled="disabled">
+                  <i class="bi bi-send"></i> Enviar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-light text-center py-3 mt-auto border-top">
+    <p class="mb-0 text-secondary">&copy; 2025 - WappTurno - B no es un número</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+
+  <script src="../js/nav.js" defer></script>
+  <script src="../js/contact.js" defer></script>
+  <script>
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        localStorage.removeItem("login");
+        window.location.href = "../index.html";
+      });
+    }
+  </script>
+</body>
+
+</html>
