@@ -75,68 +75,6 @@
             </div>
 
             <div id="appointments-container" class="row justify-content-center">
-                <div class="col-12 col-md-8 mb-4">
-                    <div class="card shadow-sm border-start border-primary border-4 h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-primary fw-bold">Turno Reservado</h5>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-person-badge"></i> Especialista:</strong> Dr. Fernando Gómez
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-activity"></i> Especialidad:</strong> Clínica General
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-calendar-event"></i> Fecha:</strong> 15 de Octubre de 2025
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-clock"></i> Hora:</strong> 10:30 hs
-                                </div>
-                                <div class="col-12">
-                                    <strong><i class="bi bi-geo-alt"></i> Lugar:</strong> Hospital Central, Calle Falsa
-                                    123
-                                </div>
-                            </div>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                                <a href="#" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle me-1"></i>
-                                    Cancelar Turno</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-8 mb-4">
-                    <div class="card shadow-sm border-start border-secondary border-4 h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-secondary fw-bold">Turno Finalizado</h5>
-                            <hr>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-person-badge"></i> Especialista:</strong> Dra. Ana Pérez
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-activity"></i> Especialidad:</strong> Odontología
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-calendar-event"></i> Fecha:</strong> 05 de Julio de 2025
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <strong><i class="bi bi-clock"></i> Hora:</strong> 14:00 hs
-                                </div>
-                                <div class="col-12">
-                                    <strong><i class="bi bi-geo-alt"></i> Lugar:</strong> Clínica del Sol, Av. Siempre
-                                    Viva 742
-                                </div>
-                            </div>
-                            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-                                <a href="#" class="btn btn-outline-secondary btn-sm disabled"><i
-                                        class="bi bi-check-circle me-1"></i> Turno Finalizado</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </main>
@@ -148,14 +86,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="../js/nav.js" defer></script>
+    <script src="../js/my-appointments.js" defer></script>
     <script>
         const logoutBtn = document.getElementById("logoutBtn");
-            if (logoutBtn) {
-                logoutBtn.addEventListener("click", () => {
-                    localStorage.removeItem("login");
-                    window.location.href = "../index.html";
-                });
-            }
+        if (logoutBtn) {
+            logoutBtn.addEventListener("click", () => {
+                localStorage.removeItem("login");
+                localStorage.removeItem("appointments");
+                window.location.href = "../index.html";
+            });
+        }
     </script>
 </body>
 

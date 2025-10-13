@@ -45,13 +45,21 @@ La versatilidad de esta aplicación de gestión de turnos permitiria abarcar un 
 
 ## Consideraciones técnicas
 **Backend**
-- Se optó por un patrón arquitectónico DAO, a fin de separar claramente la lógica de negocio de la conexión y trabajo con la db. 
+- El sistema está organizado bajo un patrón de capas. Este enfoque modular permite mantener separación de responsabilidades y facilita testeo y mantenimiento.
+    - Presentation: interacción con el usuario (menús).
+    - Models: entidades y enumeraciones.
+    - Services: lógica de negocio, esto es, los métodos y validaciones correspondientes a las entidades.
+    - Persistence: conexión a base de datos, siguiendo patrón DAO, separado de la lógica de negocios e implementado por esta.
+
 Para el sprint 1, atendiendo a que *solamente* se trabajó con las funcionalidades del usuario, se sostuvo una modularización mínima (módulos User.py, User_service.py, User_DAO.py). La misma modularización se mantuvo para las otras clases, sus métodos y conexión a base de datos.
+
 Para el sprint 2 (primer MVP), se realizó la división necesaria en carpetas (models, services, dao, etc) y la creación de las demás clases planteadas en los diagramas, puestos a punto específicamente para representar el estado final de este primer MVP.
 
 - Para facilitar el trabajo colectivo, cada desarrollador generó un entorno virtual en el cual se cargaron los requerimientos de packages con sus correspondientes versiones.
 
 - También se trabajó incorporando .env para evitar la exposición de información sensible sobre la base de datos, así como .gitignore, para no sobrecargar el proyecto con archivos innecesarios. Se agregó un .env template para que otros programadores ajenos al equipo de desarrollo pudieran ejecutar localmente con mayor facilidad el presente programa.
+
+- El módulo connection_mysql.py se encarga de gestionar la conexión a MySQL leyendo las credenciales desde variables de entorno (.env). El método create_connection() devuelve una conexión activa a MySQL sin manejos de error, ya que los mismos son abordados en los métodos de los DAOs que le aplican.
 
 - En el script de creación de las diversas tablas necesarias en la base de datos, se agregó al final una sentencia de poblamiento específica a Medical_consultations; estas son prácticas médicas registradas por código (hay varios a nivel nacional, para este proyecto se utilizó el de PAMI) para dar cuenta de las prácticas más comunes, lo cual reviste valor trabajando con Obras Sociales, equipos de salud y pacientes, tanto para mantener claridad como confidencialidad.
 Los códigos ingresados fueron una mínima parte (a modo de ejemplo). En iteraciones posteriores, sería necesario ingresar la totalidad de los mismos.
@@ -59,14 +67,23 @@ Los códigos ingresados fueron una mínima parte (a modo de ejemplo). En iteraci
 - Se optó por mantener las ids como String (UUID), dado que se trata en su mayoría de información altamente sensible (Diagnósticos de pacientes, sus tratamientos, etc).
 
 - Tal como se planteó en los diagramas, se procedió a desarrollar eliminado lógico (no físico, sino como "enabled = False") para las entidades, a fin de conservar la integridad de los registros en la base de datos. Asimismo, dado el requerimiento técnico del módulo fullstack de incorporar la función "eliminar usuario" como únicamente accesible a administrador, en este caso también se desarrolló el eliminado *físico* de usuario. El eliminado *lógico* de usuario (dar de baja la cuenta) sigue vigente para el propio usuario aunque no sea administrador.
+Por otra parte, se agregó como regla de negocio que no pueda eliminarse un turo (eliminado *lógico* , sólo accesible para administrador) si el mismo no se encuentra cancelado previamente (update de estado, accesible a todos los roles).
 
 - Para conservar la integridad de los registros en base de datos, evitar errores en el guardado de la información o fallas mayores, como dejar la conexión a la base de datos abierta, se pensaron los métodos get -llamados internamente para corroboraciones de otros métodos como register, login, updates...- con parámetros optativos, para definir cuándo la conexión debía mantenerse abierta momentáneamente, para cerrarse luego de que el método de orden superior arrojara el resultado.
+
+- Se refactorizaron menúes, partiendo de Menu.py para el login y register, derivando según rol (enum) a tres menúes específicos que, a su vez, heredan de Base_user_menu.py las funcionalidades compartidas por los tres.
+
+- Si bien se optó por realizar algunas validaciones en la capa menú, la mayoría de las mismas se encuentran en las capas más internas (services, excepcionalmente como parte del select en una query, en DAO). 
+Asimismo, lo opuesto sucede con los mensajes de error, estableciendo en menú aquellos que deberían llegar al usuario y limitando en services y DAOs los que deberían ser vistos solamente por el equipo de desarrollo.
+
+- En sprints posteriores se continuará con la refactorización del código, evitando la repetición de funcionalidades, sobre todo a lo que atañe a prints de turnos y funciones relacionadas.
 
 **Frontend**
 - Para ejecutar el proyecto de forma local, basta con abrir el archivo `index.html` en cualquier navegador moderno.
 
 - La carpeta `pages/` contiene todas las pantallas del proyecto, entre ellas:
     - `index.html` → **Página principal (home)**
+    - `about.html` → **Página Quienes somos**
     - `contact.html` → **Página de contacto**
     - `services.html` → **Listado de servicios**
     - `register.html` y `login.html` → **Pantallas de autenticación**
@@ -74,6 +91,10 @@ Los códigos ingresados fueron una mínima parte (a modo de ejemplo). En iteraci
 - El sitio tiene un diseño **responsivo** y ordenado.  
 - Para facilitar la navegación, cada archivo `.html` está vinculado mediante un **menú superior** y enlaces internos.  
 - Los **estilos** y **scripts** se mantienen en archivos separados para garantizar una buena organización y facilitar futuras modificaciones.  
+- Se agregaron validaciones y funcionalidad al formulario en página de contacto.
+- Se agregó cartelería avisando los estados de éxito y error del envío. Se trabajará en posteriores sprints para que este y las demás funcionalidades sean más amigables al usuario.
+- Se estableció la lógica de flujo para que, si se trata de sacar un turno sin estar logueado, se realice la redireccion pertinente para ello. 
+- El login y otras funcionalidades se encuentran implementados solamente con valores específicos en la app, ya que aún no se encuentra realizada la conexión a base de datos (requisito de sprint posterior).
 
 
 ## Participantes:
