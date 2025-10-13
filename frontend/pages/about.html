@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiénes Somos | WappTurno</title>
+  <meta name="description"
+    content="Conocé más sobre WappTurno: nuestra misión, visión y compromiso con la atención médica digital.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar public -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" id="navPublic">
+    <div class="container"> <a class="navbar-brand fw-bold text-primary" href="../index.html"> <i
+          class="bi bi-calendar-check"></i> WappTurno </a> <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation"> <span
+          class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="./login.html">Ingresar</a></li>
+          <li class="nav-item"><a class="nav-link" href="./services.html">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link active" href="./about.html">Quiénes Somos</a></li>
+          <li class="nav-item"><a class="nav-link" href="./contact.html">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Navbar private -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" id="navPrivate">
+    <div class="container"> <a class="navbar-brand fw-bold text-primary" href="../index.html"> <i
+          class="bi bi-calendar-check"></i> WappTurno </a> <button class="navbar-toggler" type="button"
+        data-bs-toggle="collapse" data-bs-target="#navbarNav2" aria-label="Toggle navigation"> <span
+          class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav2">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="services.html">Servicios</a></li>
+          <li class="nav-item"><a class="nav-link active" href="about.html">Quiénes Somos</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contacto</a></li>
+          <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle active" aria-current="page" href="#"
+              id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <i
+                class="bi bi-person-circle"></i> Mi Cuenta </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="my-appointments.html">Mis turnos</a></li>
+              <li><a class="dropdown-item" href="#">Panel principal</a></li>
+              <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Cerrar Sesión</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="flex-grow-1">
+    <section class="py-5 bg-light border-bottom">
+      <div class="container text-center">
+        <h1 class="display-5 fw-bold text-primary mb-3">
+          <i class="bi bi-people"></i> ¿Quiénes Somos?
+        </h1>
+        <p class="lead text-secondary mx-auto" style="max-width: 750px;">
+          En <strong>WappTurno</strong> creemos que gestionar tu salud no debería ser complicado.
+          Somos una plataforma digital que conecta pacientes, profesionales y centros médicos de forma práctica, rápida
+          y segura.
+        </p>
+      </div>
+    </section>
+
+    <section class="py-5">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-md-6">
+            <img src="../assets/img/about-img.jpg" alt="Equipo WappTurno" class="img-fluid rounded-4 shadow-sm">
+          </div>
+          <div class="col-md-6">
+            <h2 class="fw-semibold text-primary mb-3">Nuestra misión</h2>
+            <p class="text-body">
+              Facilitar el acceso a la atención médica digitalizando los procesos de reserva, comunicación y seguimiento
+              de turnos.
+              Nos enfocamos en ofrecer una experiencia accesible tanto para pacientes como para instituciones.
+            </p>
+            <h2 class="fw-semibold text-primary mt-4 mb-3">Nuestra visión</h2>
+            <p class="text-body">
+              Ser el sistema de gestión de turnos médicos más confiable de la región, impulsando la modernización del
+              sector de la salud con herramientas simples, seguras y eficientes.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-primary text-white text-center py-5">
+      <div class="container">
+        <h2 class="fw-bold mb-3">Cuidar tu tiempo es cuidar tu salud</h2>
+        <p class="lead mb-4">Con WappTurno, reservá, gestioná y recordá tus citas médicas en segundos.</p>
+        <a href="./register.html" class="btn btn-light btn-lg">
+          <i class="bi bi-person-plus"></i> Crear una cuenta
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-light text-center py-3 mt-auto border-top">
+    <p class="mb-0 text-secondary">&copy; 2025 - WappTurno - B no es un número</p>
+  </footer>
+
+      <script src="../js/nav.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

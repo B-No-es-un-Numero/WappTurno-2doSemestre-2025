@@ -55,14 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (password.value !== confirmPassword.value) {
-      showAlert("Las contraseñas no coinciden.", "danger");
-      return;
-    }
-
-
     showAlert("Registro exitoso. Redirigiendo al login...", "success");
-
 
     setTimeout(() => {
       window.location.href = "login.html";
