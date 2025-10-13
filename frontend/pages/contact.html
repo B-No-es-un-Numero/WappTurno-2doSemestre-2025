@@ -111,6 +111,7 @@
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("login");
+        localStorage.removeItem("appointments");
         window.location.href = "../index.html";
       });
     }

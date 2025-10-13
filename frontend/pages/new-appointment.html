@@ -88,11 +88,13 @@
                                         <option value="2">Dra. María García</option>
                                         <option value="3">Dr. Carlos López</option>
                                     </select>
+                                    <div class="invalid-feedback">Por favor seleccioná un médico.</div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="appointmentDate" class="form-label fw-bold">Selecciona una fecha</label>
                                     <input type="date" class="form-control" id="appointmentDate" required>
+                                    <div class="invalid-feedback">Por favor seleccioná una fecha válida.</div>
                                 </div>
 
                                 <div class="mb-3">
@@ -104,6 +106,7 @@
                                         <option value="10:00">10:00 hs</option>
                                         <option value="10:30">10:30 hs</option>
                                     </select>
+                                    <div class="invalid-feedback">Por favor seleccioná una hora.</div>
                                 </div>
 
                                 <div class="d-grid mt-4">
@@ -125,11 +128,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="../js/nav.js" defer></script>
+    <script src="../js/new-appointment.js" defer></script>
     <script>
         const logoutBtn = document.getElementById("logoutBtn");
         if (logoutBtn) {
         logoutBtn.addEventListener("click", () => {
             localStorage.removeItem("login");
+            localStorage.removeItem("appointments");
             window.location.href = "../index.html";
         });
         }
