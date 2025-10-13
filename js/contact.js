@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
         submitButton.disabled = !isValid;
     }
 
-
     [nameInput, emailInput, messageInput].forEach((input) => {
         input.addEventListener('input', () => {
             input.touched = true;
@@ -74,50 +73,50 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     submitButton.disabled = true;
- form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Evita el envío automático
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Evita el envío automático
 
-    validateForm();
+        validateForm();
 
-    if (currentErrors.length === 0) {
-      submitButton.disabled = true;
+        if (currentErrors.length === 0) {
+            submitButton.disabled = true;
 
-      try {
-        const formData = new FormData(form);
+            try {
+                const formData = new FormData(form);
 
-        const response = await fetch(form.action, {
-          method: 'POST',
-          body: formData,
-        });
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                });
 
-        if (response.ok) {
-          feedbackDiv.innerHTML =
-            '<div class="alert alert-success mt-3" role="alert">' +
-            '<i class="bi bi-check-circle-fill me-2"></i>' +
-            '¡El mensaje fue enviado correctamente! A la brevedad nos contactaremos contigo' +
-            '</div>';
+                if (response.ok) {
+                    feedbackDiv.innerHTML =
+                        '<div class="alert alert-success mt-3" role="alert">' +
+                        '<i class="bi bi-check-circle-fill me-2"></i>' +
+                        '¡El mensaje fue enviado correctamente! A la brevedad nos contactaremos contigo' +
+                        '</div>';
 
-          feedbackDiv.style.color = 'green';
-          form.reset();
-          [nameInput, emailInput, messageInput].forEach((input) => {
-            input.classList.remove('is-valid');
-          });
+                    feedbackDiv.style.color = 'green';
+                    form.reset();
+                    [nameInput, emailInput, messageInput].forEach((input) => {
+                        input.classList.remove('is-valid');
+                    });
 
-          setTimeout(() => {
-            feedbackDiv.innerHTML = '';
-          }, 4000);
-        } else {
-          throw new Error('Error al enviar el formulario.');
+                    setTimeout(() => {
+                        feedbackDiv.innerHTML = '';
+                    }, 4000);
+                } else {
+                    throw new Error('Error al enviar el formulario.');
+                }
+            } catch (error) {
+                feedbackDiv.innerHTML =
+                    '<div class="alert alert-danger mt-3" role="alert">' +
+                    '<i class="bi bi-exclamation-triangle-fill me-2"></i>' +
+                    'Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.' +
+                    '</div>';
+            } finally {
+                submitButton.disabled = false;
+            }
         }
-      } catch (error) {
-        feedbackDiv.innerHTML =
-          '<div class="alert alert-danger mt-3" role="alert">' +
-          '<i class="bi bi-exclamation-triangle-fill me-2"></i>' +
-          'Hubo un error al enviar el mensaje. Por favor, intenta nuevamente.' +
-          '</div>';
-      } finally {
-        submitButton.disabled = false;
-      }
-    }
-  });
+    });
 });
