@@ -76,12 +76,20 @@
                             <form>
                                 <div class="mb-3">
                                     <label for="specialty" class="form-label fw-bold">Especialidad</label>
-                                    <input type="text" class="form-control" id="specialty" value="Clínica General"
-                                        disabled>
+                                    <select class="form-select" id="specialty" required>
+                                        <option selected disabled value="">Selecciona una especialidad...</option>
+                                        <option value="1">Clínica General</option>
+                                        <option value="2">Cardiología</option>
+                                        <option value="3">Odontología</option>
+                                        <option value="4">Oftalmología</option>
+                                        <option value="5">Neurología</option>
+                                        <option value="6">Pediatría</option>
+                                    </select>
+                                    <div class="invalid-feedback">Por favor seleccioná una especialidad.</div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="doctor" class="form-label fw-bold">Selecciona un profesional</label>
+                                    <label for="doctor" class="form-label fw-bold">Profesional</label>
                                     <select class="form-select" id="doctor" required>
                                         <option selected disabled value="">Selecciona un profesional...</option>
                                         <option value="1">Dr. Juan Pérez</option>
@@ -94,7 +102,7 @@
                                 <div class="mb-3">
                                     <label for="appointmentDate" class="form-label fw-bold">Selecciona una fecha</label>
                                     <input type="date" class="form-control" id="appointmentDate" required>
-                                    <div class="invalid-feedback">Por favor seleccioná una fecha válida.</div>
+                                    <div class="invalid-feedback">Por favor seleccioná una fecha válida (no pasada).</div>
                                 </div>
 
                                 <div class="mb-3">
