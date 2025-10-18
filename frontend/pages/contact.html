@@ -60,6 +60,7 @@
       </div>
     </div>
   </nav>
+
   <main class="flex-grow-1">
     <section class="py-5">
       <div class="container">
@@ -106,16 +107,7 @@
 
   <script src="../js/nav.js" defer></script>
   <script src="../js/contact.js" defer></script>
-  <script>
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("login");
-        localStorage.removeItem("appointments");
-        window.location.href = "../index.html";
-      });
-    }
-  </script>
+  <script src="../js/logout.js" defer></script>
 </body>
 
 </html>

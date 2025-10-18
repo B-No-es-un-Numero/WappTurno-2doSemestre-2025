@@ -251,36 +251,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="../js/nav.js" defer></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const reserveBtns = document.querySelectorAll(".reserveBtn");
-
-            reserveBtns.forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    e.preventDefault();
-
-                    const isLoggedIn = localStorage.getItem("login") === "true";
-
-                    if (isLoggedIn) {
-                        window.location.href = "new-appointment.html";
-                    } else {
-                        window.location.href = "login.html";
-                    }
-                });
-            });
-
-            const logoutBtn = document.getElementById("logoutBtn");
-            if (logoutBtn) {
-                logoutBtn.addEventListener("click", () => {
-                    localStorage.removeItem("login");
-                    localStorage.removeItem("appointments");
-                    window.location.href = "../index.html";
-                });
-            }
-        });
-
-    </script>
+    <script src="../js/services.js" defer></script>
+    <script src="../js/logout.js" defer></script>
+    
 
 </body>
 
