@@ -9,10 +9,10 @@ class Availability:
         time_frame: TimeFrameEnum,
         days: DaysEnum
     ):
-        self.id = str(uuid.uuid4())
-        self.doctor_id = doctor_id
-        self.time_frame = time_frame
-        self.days = days
+        self.__id = str(uuid.uuid4())
+        self.__doctor_id = doctor_id
+        self.__time_frame = time_frame
+        self.__days = days
 
     def __str__(self):
         return f"Availability(id={self.id}, doctor_id={self.doctor_id}, time_frame={self.time_frame}, days={self.days})"

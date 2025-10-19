@@ -11,14 +11,14 @@ class Appointment:
         frequency: str,
         medical_consultation_id: str
     ):
-        self.appointment_id = str(uuid.uuid4())
-        self.date_and_time = date_and_time
-        self.user_id = user_id
-        self.doctor_id = doctor_id
-        self.medical_consultation_id = medical_consultation_id
-        self.frequency = frequency
-        self.state = AppointmentStateEnum.SCHEDULED
-        self.enabled = True
+        self.__appointment_id = str(uuid.uuid4())
+        self.__date_and_time = date_and_time
+        self.__user_id = user_id
+        self.__doctor_id = doctor_id
+        self.__medical_consultation_id = medical_consultation_id
+        self.__frequency = frequency
+        self.__state = AppointmentStateEnum.SCHEDULED
+        self.__enabled = True
 
     def __str__(self):
         return f"Appointment(id={self.appointment_id}, date_and_time={self.date_and_time}, user_id={self.user_id}, doctor_id={self.doctor_id}, state={self.state}, enabled={self.enabled})"

@@ -26,9 +26,9 @@ class Doctor(User):
             role=RoleEnum.DOCTOR,
             date_of_birth=date_of_birth
         )
-        self.specialty = specialty
-        self.accepts_medical_insurance = accepts_medical_insurance
-        self.license_number = license_number
+        self.__specialty = specialty
+        self.__accepts_medical_insurance = accepts_medical_insurance
+        self.__license_number = license_number
 
     def __str__(self):
         return (f"Doctor {self.name} {self.surname} - "
@@ -42,20 +42,26 @@ class Doctor(User):
                 f"accepts_medical_insurance={self.accepts_medical_insurance!r}, "
                 f"license_number={self.license_number!r})")
 
-    def get_specialty(self):
-        return self.specialty
+    @property
+    def specialty(self):
+        return self.__specialty
 
-    def set_specialty(self, specialty: str):
-        self.specialty = specialty
+    @specialty.setter
+    def specialty(self, value: str):
+        self.__specialty = value
+        
+    @property
+    def accepts_medical_insurance(self):
+        return self.__accepts_medical_insurance
 
-    def get_accepts_medical_insurance(self):
-        return self.accepts_medical_insurance
+    @accepts_medical_insurance.setter
+    def accepts_medical_insurance(self, value: bool):
+        self.__accepts_medical_insurance = value
 
-    def set_accepts_medical_insurance(self, accepts_medical_insurance: bool):
-        self.accepts_medical_insurance = accepts_medical_insurance
+    @property
+    def license_number(self):
+        return self.__license_number
 
-    def get_license_number(self):
-        return self.license_number
-
-    def set_license_number(self, license_number: int):
-        self.license_number = license_number
+    @license_number.setter
+    def license_number(self, value: int):
+        self.__license_number = value

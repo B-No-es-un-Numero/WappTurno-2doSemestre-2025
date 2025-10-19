@@ -19,7 +19,7 @@ class AppointmentService:
        
         try:
             
-            if not self._validate_appointment_data(date_and_time, user_id, doctor_id, medical_consultation_id):
+            if not self._validate_appointment_data(date_and_time, user_id, doctor_id, medical_consultation_id, ""):
                 return None
             
             new_appointment = Appointment(
@@ -43,9 +43,11 @@ class AppointmentService:
     def reschedule_appointment(self, appointment_id: str, new_date: datetime):
             previous_appointment = self._appointment_dao.get_appointment_by_id(appointment_id)
 
-            if not self._validate_appointment_data(new_date, previous_appointment.user_id, 
+            if not self._validate_appointment_data(new_date, 
+                        previous_appointment.user_id, 
                         previous_appointment.doctor_id,
-                        previous_appointment.medical_consultation_id):
+                        previous_appointment.medical_consultation_id,
+                        appointment_id):
                 return None
                  
             if not self._appointment_dao.reschedule_appointment(appointment_id, new_date):
@@ -96,7 +98,8 @@ class AppointmentService:
         
         success = self._appointment_dao.update_state(appointment_id, appointment_state_enum)
         if success:
-            print(f"Turno actualizado a: {appointment_state_enum.value}")
+            print(f"Turno actualizado a: {AppointmentStateEnum.get_spanish_value(
+                appointment_state_enum.value)}")
         else:
             print("Error: No se pudo actualizar el estado del turno.")
         
@@ -127,7 +130,8 @@ class AppointmentService:
 
 
     def _validate_appointment_data(self, date_and_time: datetime, user_id: str, 
-                                  doctor_id: str, medical_consultation_id: str):
+                                  doctor_id: str, medical_consultation_id: str,
+                                  appointment_id: str):
         
         if date_and_time < datetime.now():
             print("Error: No se puede agendar turno en fecha y hora pasada")
@@ -137,7 +141,7 @@ class AppointmentService:
             print("Error: Todos los campos son requeridos")
             return False
         
-        if self._appointment_dao.check_time_conflict(user_id, doctor_id, date_and_time):
+        if self._appointment_dao.check_time_conflict(appointment_id, user_id, doctor_id, date_and_time):
             print(f"""Error: Uno de los usuarios ya tiene un turno a las {date_and_time.strftime('%H:%M')}.
                   Recuerde que los turnos son de 1 hora.""")
             return False
