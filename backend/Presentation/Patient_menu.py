@@ -1,8 +1,11 @@
+from Models.Appointment import Appointment
+from Models.Appointment_state_enum import AppointmentStateEnum
 from Presentation.Base_user_menu import BaseUserMenu
 from Models.Role_enum import RoleEnum
 from datetime import datetime
 
 class PatientMenu(BaseUserMenu):
+
     def __init__(self, user_service, appointment_service, user):
         super().__init__(user_service, user, appointment_service)
 
@@ -37,17 +40,7 @@ class PatientMenu(BaseUserMenu):
             print("No hay turnos registrados.\n")
             return
         else:
-            print("\n=== TURNOS ===\n")
-            for idx, appointment in enumerate(data, start=1):
-                print(f"Turno #{idx}")
-                print(f"ID Turno:         {appointment.appointment_id}")
-                print(f"Fecha y hora:     {appointment.date_and_time}")
-                print(f"Estado:           {appointment.state.value}")
-                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
-                print(f"Médico:           {appointment.doctor_info}")
-                print(f"Especialidad:     {appointment.specialty}")
-                print(f"Consulta:         {appointment.consultation_name}")
-                print("-" * 50)
+            self.__print_appointments(data)
 
     def create_appointment(self):
         doctors = self._user_service.get_all_users_by_role(RoleEnum.DOCTOR)
@@ -77,17 +70,7 @@ class PatientMenu(BaseUserMenu):
         if not data:
             print("No hay turnos registrados.\n")
         else:
-            print("\n=== TURNOS ===\n")
-            for idx, appointment in enumerate(data, start=1):
-                print(f"Turno #{idx}")
-                print(f"ID Turno:         {appointment.appointment_id}")
-                print(f"Fecha y hora:     {appointment.date_and_time}")
-                print(f"Estado:           {appointment.state.value}")
-                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
-                print(f"Médico:           {appointment.doctor_info}")
-                print(f"Especialidad:     {appointment.specialty}")
-                print(f"Consulta:         {appointment.consultation_name}")
-                print("-" * 50)
+            self.__print_appointments(data)
         appointment_id = input("Ingrese el ID del turno a reprogramar: ")
         new_date = input("Ingrese la nueva fecha (YYYY-MM-DD): ")
         new_time = input("Ingrese la nueva hora (HH:MM): ")
@@ -101,3 +84,16 @@ class PatientMenu(BaseUserMenu):
                 print("No se pudo reprogramar el turno.\n")
         except ValueError:
             print("Formato de fecha u hora inválido.\n")
+
+    def __print_appointments(self, data: list['Appointment']):
+        print("\n=== TURNOS ===\n")
+        for idx, appointment in enumerate(data, start=1):
+            print(f"Turno #{idx}")
+            print(f"ID Turno:         {appointment.appointment_id}")
+            print(f"Fecha y hora:     {appointment.date_and_time}")
+            print(f"Estado:           {AppointmentStateEnum.get_spanish_value(appointment.state.value)}")
+            print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+            print(f"Médico:           {appointment.doctor_info}")
+            print(f"Especialidad:     {appointment.specialty}")
+            print(f"Consulta:         {appointment.consultation_name}")
+            print("-" * 50) 

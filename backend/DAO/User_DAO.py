@@ -9,6 +9,7 @@ class UserDAO:
     def __init__(self):
        pass
 
+
     def open_connection(self):
         if hasattr(self, "__connection") and self.__connection.is_connected(): 
             pass
@@ -69,19 +70,7 @@ class UserDAO:
                 cursor.execute(query, (user_id,))
                 row = cursor.fetchone()
                 if row:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.enabled = row.get("enabled", True)
-                    return user
+                   return self.__create_user_dto(row)
                 return None
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar usuario por ID: {error}")
@@ -97,21 +86,8 @@ class UserDAO:
                 cursor.execute(query, (user_email,))
                 row = cursor.fetchone()
                 if row:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.user_id = row.get("id")
-                    user.enabled = row.get("enabled", True)
-                    return user
-            return None
+                    return self.__create_user_dto(row)    
+                return None
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar por email: {error}")
         finally:
@@ -123,59 +99,20 @@ class UserDAO:
         try:
             self.open_connection()
             with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("SELECT * FROM Users WHERE enabled = TRUE")
+                query= ("SELECT * FROM Users WHERE enabled = TRUE "
+                "AND role != 'ADMIN'")
                 cursor.execute(query, ())
                 rows = cursor.fetchall()
                 users = []
 
                 for row in rows:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.user_id = row.get("id")
-                    user.enabled = row.get("enabled", True)
+                    user = self.__create_user_dto(row) 
                     users.append(user)
             return users
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar usuarios: {error}")
         finally: self.__connection.close()
 
-
-    def get_all_users_by_role2(self, role: RoleEnum) -> list['User']:
-        try:
-            self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query = "SELECT * FROM Users WHERE role = %s AND enabled = TRUE"
-                cursor.execute(query, (role.value,))
-                rows = cursor.fetchall()
-                users = []
-                for row in rows:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.enabled = row.get("enabled", True)
-                    users.append(user)
-            return users
-        except mysql.connector.Error as error:
-            raise Exception(f"Error al buscar usuarios por rol: {error}")
-        finally:
-            self.__connection.close()
  
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         try:
@@ -196,39 +133,10 @@ class UserDAO:
                 users = []
     
                 for row in rows:
-                    if row.get("specialty") is not None:
-                        doctor = Doctor(
-                            name=row["name"],
-                            surname=row["surname"],
-                            dni=row["dni"],
-                            email=row["email"],
-                            password=row["password"],
-                            phone_number=row["phone_number"],
-                            date_of_birth=row["date_of_birth"],
-                            specialty=row["specialty"],
-                            accepts_medical_insurance=row["accepts_medical_insurance"],
-                            license_number=row["license_number"]
-                        )
-                        doctor.user_id = row["id"]
-                        doctor.enabled = row.get("enabled", True)
-                        users.append(doctor)
-                    else:
-                        user = User(
-                            name=row["name"],
-                            surname=row["surname"],
-                            dni=row["dni"],
-                            email=row["email"],
-                            password=row["password"],
-                            phone_number=row["phone_number"],
-                            role=RoleEnum(row["role"]),
-                            date_of_birth=row["date_of_birth"]
-                        )
-                        user.user_id = row["id"]
-                        user.enabled = row.get("enabled", True)
-                        users.append(user)
-    
+                    user = self.__create_user_dto(row) 
+                    users.append(user)
                 return users
-    
+            
         except mysql.connector.Error as error:
             raise Exception(f"Error al buscar usuarios por rol: {error}")
         finally:
@@ -250,19 +158,7 @@ class UserDAO:
                 cursor.execute("SELECT * FROM Users WHERE email = %s", (email,))
                 row = cursor.fetchone()
                 if row:
-                    role_enum = RoleEnum(row["role"]) if "role" in row else None
-                    user = User(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        role=role_enum,
-                        date_of_birth=row["date_of_birth"]
-                    )
-                    user.enabled = row.get("enabled", True)
-                    return user
+                    return self.__create_user_dto(row)
             
         except mysql.connector.Error as error:
             raise Exception(f"Error al insertar: {error}")
@@ -326,22 +222,43 @@ class UserDAO:
                 "WHERE id = %s", (doctor_id,))
                 row = cursor.fetchone()
                 if row:
-                    doctor = Doctor(
-                        name=row["name"],
-                        surname=row["surname"],
-                        dni=row["dni"],
-                        email=row["email"],
-                        password=row["password"],
-                        phone_number=row["phone_number"],
-                        date_of_birth=row["date_of_birth"],
-                        specialty=row["specialty"],
-                        accepts_medical_insurance=row["accepts_medical_insurance"],
-                        license_number=row["license_number"],
-                    )
-                    doctor.enabled = row["enabled"]
-                    doctor.user_id = row["user_id"]
-                    return doctor
-            
+                    return self.__create_user_dto(row)
         except mysql.connector.Error as error:
             raise Exception(f"Error al insertar: {error}")
         finally: self.__connection.close()
+
+
+    def __create_user_dto(self, data_row) -> User:
+        role_enum = RoleEnum(data_row["role"]) if "role" in data_row else None
+        if (role_enum.name == "DOCTOR" and data_row.get("specialty") is not None):
+            doctor = Doctor(
+                            name=data_row["name"],
+                            surname=data_row["surname"],
+                            dni=data_row["dni"],
+                            email=data_row["email"],
+                            password=data_row["password"],
+                            phone_number=data_row["phone_number"],
+                            date_of_birth=data_row["date_of_birth"],
+                            specialty=data_row["specialty"],
+                            accepts_medical_insurance=data_row["accepts_medical_insurance"],
+                            license_number=data_row["license_number"]
+                        )
+            doctor.user_id = data_row["id"]
+            doctor.enabled = data_row.get("enabled", True)
+            return doctor           
+        user = User(
+            name=data_row["name"],
+            surname=data_row["surname"],
+            dni=data_row["dni"],
+            email=data_row["email"],
+            password=data_row["password"],
+            phone_number=data_row["phone_number"],
+            role=role_enum,
+            date_of_birth=data_row["date_of_birth"]
+        )
+        user.user_id = data_row.get("id")
+        user.enabled = data_row.get("enabled", True)
+        return user
+    
+
+

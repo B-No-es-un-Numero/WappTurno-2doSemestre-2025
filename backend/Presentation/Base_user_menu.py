@@ -1,20 +1,20 @@
+from Models.Appointment import Appointment
 from Models.Role_enum import RoleEnum
 from Models.Appointment_state_enum import AppointmentStateEnum
 from Services.Appointment_service import AppointmentService
 
 class BaseUserMenu:
+    
     def __init__(self, user_service, user, appointment_service: AppointmentService):
         self._appointment_service = appointment_service
         self._user_service = user_service
         self.user = user
-
 
     def show_common_options(self):
         print("1. Editar datos personales")
         print("2. Dar de baja mi cuenta")
         print("3. Editar frecuencia de un turno")
         print("4. Editar estado de un turno")
-
 
     def handle_common_options(self, option):
         if option == "1":
@@ -30,7 +30,6 @@ class BaseUserMenu:
             self.update_state()
             return True
         return False
-
 
     def update_profile(self):
         email = input("Confirme su email: ")
@@ -49,7 +48,6 @@ class BaseUserMenu:
         self._user_service.update_user(name, surname, dni, email, phone, password)
         print("Datos actualizados.\n")
 
-
     def disable_account(self):
         email = input("Confirme su email para dar de baja: ")
         if email == self.user.email:
@@ -59,9 +57,11 @@ class BaseUserMenu:
         else:
             print("Email incorrecto.\n")
 
-
     def update_frequency(self):
         if(self.user.role == RoleEnum.ADMIN):
+            users = self._user_service.get_all_users()
+            for u in users or []:
+                print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
             searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
             data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         elif(self.user.role == RoleEnum.DOCTOR):        
@@ -72,18 +72,7 @@ class BaseUserMenu:
         if not data:
             print("No hay turnos registrados.\n")
         else:
-            print("\n=== TURNOS ===\n")
-            for idx, appointment in enumerate(data, start=1):
-                print(f"Turno #{idx}")
-                print(f"ID Turno:         {appointment.appointment_id}")
-                print(f"Fecha y hora:     {appointment.date_and_time}")
-                print(f"Estado:           {appointment.state.value}")
-                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
-                print(f"Paciente:         {appointment.patient_info}")
-                print(f"Médico:           {appointment.doctor_info}")
-                print(f"Especialidad:     {appointment.specialty}")
-                print(f"Consulta:         {appointment.consultation_name}")
-                print("-" * 50)
+            self.__print_appointments(data)
         
         appointment_id = input("\n Ingrese el ID del turno: ")
         frequency = input("\n Ingrese nueva frecuencia (semanal/mensual/quincenal): ")
@@ -91,6 +80,9 @@ class BaseUserMenu:
 
     def update_state(self):
         if(self.user.role == RoleEnum.ADMIN):
+            users = self._user_service.get_all_users()
+            for u in users or []:
+                print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
             searched_id = input("Ingrese id del usuario para ver sus turnos. \n")
             data = self._appointment_service.get_all_appointments_by_user_id(searched_id, False)
         elif(self.user.role == RoleEnum.DOCTOR):        
@@ -101,19 +93,8 @@ class BaseUserMenu:
         if not data:
             print("No hay turnos registrados.\n")
         else:
-            print("\n=== TURNOS ===\n")
-            for idx, appointment in enumerate(data, start=1):
-                print(f"Turno #{idx}")
-                print(f"ID Turno:         {appointment.appointment_id}")
-                print(f"Fecha y hora:     {appointment.date_and_time}")
-                print(f"Estado:           {appointment.state.value}")
-                print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
-                print(f"Paciente:         {appointment.patient_info}")
-                print(f"Médico:           {appointment.doctor_info}")
-                print(f"Especialidad:     {appointment.specialty}")
-                print(f"Consulta:         {appointment.consultation_name}")
-                print("-" * 50)
-
+            self.__print_appointments(data)
+                
         appointment_id = input("\n Ingrese el ID del turno: ")
         option = input("\n Seleccione nuevo estado:\n 1. Confirmado\n 2. Cancelado\n 3. Finalizado \nOpción: ")
         state_map = {
@@ -126,3 +107,17 @@ class BaseUserMenu:
             self._appointment_service.update_state(appointment_id, new_state)
         else:
             print("Opción inválida.\n")
+    
+    def __print_appointments(self, data: list['Appointment']):
+        print("\n=== TURNOS ===\n")
+        for idx, appointment in enumerate(data, start=1):
+            print(f"Turno #{idx}")
+            print(f"ID Turno:         {appointment.appointment_id}")
+            print(f"Fecha y hora:     {appointment.date_and_time}")
+            print(f"Estado:           {AppointmentStateEnum.get_spanish_value(appointment.state.value)}")
+            print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
+            print(f"Paciente:         {appointment.patient_info}")
+            print(f"Médico:           {appointment.doctor_info}")
+            print(f"Especialidad:     {appointment.specialty}")
+            print(f"Consulta:         {appointment.consultation_name}")
+            print("-" * 50)

@@ -1,9 +1,11 @@
+from Models.Appointment_state_enum import AppointmentStateEnum
 from Presentation.Base_user_menu import BaseUserMenu
 from Models.Days_enum import DaysEnum
 from Models.TimeFrame_enum import TimeFrameEnum
 
 
 class DoctorMenu(BaseUserMenu):
+
     def __init__(self, user_service, availability_service, appointment_service, user):
         super().__init__(user_service, user, appointment_service)
         self._availability_service = availability_service
@@ -12,7 +14,7 @@ class DoctorMenu(BaseUserMenu):
         while True:
             print("\n--- MENÚ DOCTOR ---")
             self.show_common_options()
-            print("5. Ver mis turnero")
+            print("5. Ver mi turnero")
             print("6. Crear horario de disponibilidad")
             print("7. Editar horario")
             print("8. Eliminar horario")
@@ -42,7 +44,6 @@ class DoctorMenu(BaseUserMenu):
             else:
                 print("Opción no válida.\n")
 
-
     def show_appointments(self):
         data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
         if not data:
@@ -53,12 +54,11 @@ class DoctorMenu(BaseUserMenu):
             print(f"Turno #{idx}")
             print(f"ID Turno:         {appointment.appointment_id}")
             print(f"Fecha y hora:     {appointment.date_and_time}")
-            print(f"Estado:           {appointment.state.value}")
+            print(f"Estado:           {AppointmentStateEnum.get_spanish_value(appointment.state.value)}")
             print(f"Frecuencia:       {appointment.frequency if appointment.frequency else 'única'}")
             print(f"Paciente:         {appointment.patient_info}")
             print(f"Consulta:         {appointment.consultation_name}")
             print("-" * 50)
-
 
     def add_availability(self):
         tf_map = {"1": TimeFrameEnum.MAÑANA, "2": TimeFrameEnum.TARDE, "3": TimeFrameEnum.NOCHE}
@@ -73,7 +73,6 @@ class DoctorMenu(BaseUserMenu):
         if timeframe and days:
             self._availability_service.add_availability(self.user.user_id, timeframe, days)
             print("Disponibilidad creada exitosamente.\n")
-
 
     def edit_availability(self):
         self.list_availability()
@@ -91,13 +90,11 @@ class DoctorMenu(BaseUserMenu):
             self._availability_service.update_availability(availability_id, timeframe, days)
             print("Disponibilidad actualizada exitosamente.\n")
 
-
     def remove_availability(self):
         self.list_availability()
         availability_id = input("Seleccione ID del horario a eliminar: ")
         self._availability_service.remove_availability(availability_id)
         print("Disponibilidad eliminada exitosamente.\n")
-
 
     def list_availability(self):
         data = self._availability_service.get_all_by_doctor_id(self.user.user_id)
@@ -118,7 +115,6 @@ class DoctorMenu(BaseUserMenu):
         print(f"Horarios laborales del profesional: {self.user.name} {self.user.surname}.\n")
         for a in data:
             print(f"ID: {a.id} | Día: {a.days} | Horario: {a.time_frame}")
-
 
     def update_doctor_data(self):
         specialty = input("Especialidad: ")
