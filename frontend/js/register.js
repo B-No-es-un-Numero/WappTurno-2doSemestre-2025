@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const alertContainer = document.getElementById("alertContainer");
   const message = document.getElementById('passwordMessage');
   const submitBtn = document.getElementById("submitBtn");
+  const dniInput = document.getElementById("dni");
 
   submitBtn.disabled = true;
 
