@@ -6,10 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isLoggedIn) {
       header.innerHTML = `
           <div class="container">
-            <h1 class="display-5 fw-bold text-primary">
+            <h1 class="display-5 fw-bold text-primary title">
               <i class="bi bi-hospital"></i> Bienvenido a WappTurno
             </h1>
-            <p class="lead text-body">Tu sistema de reservas médicas rápido, seguro y sencillo.</p>
+            <p class="lead text-body p-header">Tu sistema de reservas médicas rápido, seguro y sencillo.</p>
             <div class="mt-4">
               <a href="./pages/login.html" class="btn btn-primary btn-lg me-2">
                 <i class="bi bi-box-arrow-in-right"></i> Ingresar
@@ -23,10 +23,10 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       header.innerHTML = `
         <div class="container">
-            <h1 class="display-5 fw-bold text-primary">
+            <h1 class="display-5 fw-bold text-primary title">
               <i class="bi bi-hospital"></i> Bienvenido a WappTurno
             </h1>
-            <p class="lead text-body">Tu sistema de reservas médicas rápido, seguro y sencillo.</p>
+            <p class="lead text-body p-header">Tu sistema de reservas médicas rápido, seguro y sencillo.</p>
             <div class="mt-4">
               <a href="./pages/new-appointment.html" class="btn btn-primary btn-lg me-2">
                 <i class="bi bi-box-arrow-in-right"></i> Nuevo turno
