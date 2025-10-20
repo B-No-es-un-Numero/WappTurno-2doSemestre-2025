@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* SECCION DE CARACTERISTICAS DEL INDEX */
+
+.features .col-md-4 {
+  background: #fff;
+  padding: 1.5rem;
+  transition: transform 0.2s ease;
+}
+
+.features .col-md-4:hover {
+  transform: translateY(-4px);
+}
+
+.features .bi {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.features .col-md-4:hover .bi {
+  transform: scale(1.05);
+}
+
+.features h3 {
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.features .col-md-4:hover h3 {
+  color: #0d6efd;
+}
+
+/* FIN SECCION DE CARACTERISTICAS DEL INDEX */
+
+/* SECCION SERVICIOS */
+
+.services-grid .card {
+  transition: transform 0.2s ease;
+}
+
+.services-grid .card:hover {
+  transform: translateY(-4px);
+}
+
+.services-grid .card .bi.display-4 {
+  transition: transform 0.2s ease;
+}
+
+.services-grid .card:hover .bi.display-4 {
+  transform: scale(1.08);
+}
+
+.services-grid .card .card-title {
+  transition: color 0.2s ease;
+}
+
+.services-grid .card:hover .card-title {
+  color: #0d6efd;
+}
+
+/*FIN SECCION SERVICIOS */
+
