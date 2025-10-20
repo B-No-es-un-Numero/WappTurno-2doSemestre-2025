@@ -6,6 +6,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const timeSelect = document.getElementById("appointmentTime");
   const submitButton = form.querySelector('button[type="submit"]');
 
+  const params = new URLSearchParams(window.location.search);
+  const selectedSpecialty = params.get("specialty");
+
+
+   if (selectedSpecialty) {
+    for (const option of specialtySelect.options) {
+      if (option.textContent.trim().toLowerCase() === selectedSpecialty.toLowerCase()) {
+        option.selected = true;
+        break;
+      }
+    }
+  }
+
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
@@ -110,4 +124,5 @@ document.addEventListener("DOMContentLoaded", () => {
       submitButton.classList.remove("disabled", "opacity-75");
     }
   }
+
 });
