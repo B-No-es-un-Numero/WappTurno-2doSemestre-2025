@@ -43,9 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
   confirmPassword.addEventListener('input', checkPasswordMatch);
 
   dniInput.addEventListener("input", (e) => {
-    e.target.value = e.target.value.replace(/\D/g, ""); // Eliminar caracteres no numéricos
+    e.target.value = e.target.value.replace(/\D/g, ""); 
     if (e.target.value.length > 8) {
-      e.target.value = e.target.value.slice(0, 8); // Limitar a 8 dígitos
+      e.target.value = e.target.value.slice(0, 8); 
     }
   });
 
