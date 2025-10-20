@@ -39,11 +39,11 @@ class AppointmentDAO:
                 return True
                 
         except mysql.connector.Error as err:
+            self.__connection.rollback()
             print(f"Error al crear el turno: {err}")
             return None
         finally:
-            if hasattr(self, "__connection") and self.__connection.is_connected():
-                self.__connection.close()
+            self.__connection.close()
 
     def reschedule_appointment(self, appointment_id: str, date_and_time: datetime):
         
@@ -56,11 +56,11 @@ class AppointmentDAO:
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as err:
+            self.__connection.rollback()
             print(f"Error al reprogramar turno: {err}")
             return False
         finally:
-            if hasattr(self, "__connection") and self.__connection.is_connected():
-                self.__connection.close()
+            self.__connection.close()
 
     def delete_appointment(self, appointment_id: str):
         try:
@@ -71,11 +71,11 @@ class AppointmentDAO:
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as err:
+            self.__connection.rollback()
             print(f"Error al eliminar turno: {err}")
             return False
         finally:
-            if hasattr(self, "__connection") and self.__connection.is_connected():
-                self.__connection.close()
+            self.__connection.close()
 
     def update_frequency(self, appointment_id: str, frequency: str):
         
@@ -91,11 +91,11 @@ class AppointmentDAO:
                 return cursor.rowcount > 0
                 
         except mysql.connector.Error as err:
+            self.__connection.rollback()
             print(f"Error al actualizar frecuencia: {err}")
             return False
         finally:
-            if hasattr(self, "__connection") and self.__connection.is_connected():
-                self.__connection.close()
+            self.__connection.close()
 
     def update_state(self, appointment_id: str, appointment_state_enum: AppointmentStateEnum) -> bool:
         
@@ -111,11 +111,11 @@ class AppointmentDAO:
                 return cursor.rowcount > 0
                 
         except mysql.connector.Error as err:
+            self.__connection.rollback()
             print(f"Error al actualizar estado: {err}")
             return False
         finally:
-            if hasattr(self, "__connection") and self.__connection.is_connected():
-                self.__connection.close()
+            self.__connection.close()
 
     def get_appointment_by_id(self, appointment_id: str,
                               close: bool = True) -> Appointment | None:
@@ -222,8 +222,7 @@ class AppointmentDAO:
             return True 
 
         finally:
-            if hasattr(self, "__connection") and self.__connection.is_connected():
-                self.__connection.close()
+            self.__connection.close()
 
     def get_all_medical_consultations(self) -> list['Medical_consultation']:
         try:

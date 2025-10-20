@@ -32,13 +32,13 @@ class AvailabilityDAO:
                     new_availability.days
                 ),
             )    
-            self.__connection.commit()  
+            self.__connection.commit()
+            return new_availability  
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al insertar en la base de datos: {error}") 
         finally:        
             self.__connection.close()  
-        return new_availability
     
 
     def delete(self, availability_id: str) -> bool:
@@ -50,6 +50,7 @@ class AvailabilityDAO:
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as error:
+            self.__connection.rollback()
             raise Exception(f"Error al eliminar el horario: {error}")
         finally: self.__connection.close()
 
