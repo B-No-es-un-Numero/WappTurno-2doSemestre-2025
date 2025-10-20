@@ -41,6 +41,13 @@ document.addEventListener("DOMContentLoaded", () => {
   password.addEventListener('input', checkPasswordMatch);
   confirmPassword.addEventListener('input', checkPasswordMatch);
 
+  dniInput.addEventListener("input", (e) => {
+    e.target.value = e.target.value.replace(/\D/g, ""); // Eliminar caracteres no numéricos
+    if (e.target.value.length > 8) {
+      e.target.value = e.target.value.slice(0, 8); // Limitar a 8 dígitos
+    }
+  });
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -61,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = "login.html";
     }, 2000);
   });
+
 
 
 
