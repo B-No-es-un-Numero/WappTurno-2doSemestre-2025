@@ -195,7 +195,8 @@ class AppointmentDAO:
             if close:
                 self.__connection.close()
 
-    def check_time_conflict(self, user_id: str, doctor_id: str, date_and_time: datetime):
+    def check_time_conflict(self, appointment_id: str, user_id: str, doctor_id: str,
+                            date_and_time: datetime):
         try:
             self.open_connection()
             with self.__connection.cursor() as cursor:
@@ -206,10 +207,12 @@ class AppointmentDAO:
                     "AND date_and_time BETWEEN DATE_SUB(%s, INTERVAL 59 MINUTE) "
                     "AND DATE_ADD(%s, INTERVAL 59 MINUTE) "
                     "AND state IN ('SCHEDULED', 'RESCHEDULED') "
+                    "AND id NOT IN (%s) "
                     "AND enabled = 1"
                 )
 
-                cursor.execute(query, (user_id, doctor_id, date_and_time, date_and_time,))
+                cursor.execute(query, (user_id, doctor_id, date_and_time, 
+                                       date_and_time, appointment_id))
                 result = cursor.fetchone()
                 conflicts_count = result[0] if result else 0
                 return conflicts_count > 0

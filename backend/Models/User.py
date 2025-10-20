@@ -14,16 +14,16 @@ class User:
         role: RoleEnum,
         date_of_birth: date
     ):
-        self.user_id = str(uuid.uuid4())
-        self.name = name
-        self.surname = surname
-        self.dni = dni
-        self.email = email
+        self.__user_id = str(uuid.uuid4())
+        self.__name = name
+        self.__surname = surname
+        self.__dni = dni
+        self.__email = email
         self.__password = password
         self.__phone_number = phone_number
-        self.role = role
-        self.date_of_birth = date_of_birth
-        self.enabled = True
+        self.__role = role
+        self.__date_of_birth = date_of_birth
+        self.__enabled = True
 
     def __str__(self):
         return f"User(id={self.user_id}, name={self.name}, surname={self.surname}, dni={self.dni}, email={self.email}, role={self.role}, date_of_birth={self.date_of_birth}, enabled={self.enabled})"
