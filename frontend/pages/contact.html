@@ -48,8 +48,6 @@
                 class="bi bi-person-circle"></i> Mi Cuenta </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
               <li><a class="dropdown-item" href="my-appointments.html">Mis turnos</a></li>
-              <li><a class="dropdown-item" href="#">Panel principal</a></li>
-              <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
@@ -60,27 +58,35 @@
       </div>
     </div>
   </nav>
+
   <main class="flex-grow-1">
     <section class="py-5">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-6">
-            <h2 class="text-center mb-4 text-primary">
+            <h1 class="text-center mb-4 text-primary">
               <i class="bi bi-envelope-fill"></i> Contáctanos
-            </h2>
-            <form id="contact-form" action="https://formsubmit.co/bnan.developer@gmail.com" method="POST">
+            </h1>
+            <form id="contact-form" action="https://formsubmit.co/bnan.developer@gmail.com" 
+              method="POST">
               <div class="mb-3">
                 <label for="name" class="form-label">Nombre</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Tu nombre completo" required>
+                <input type="text" class="form-control" id="name" name="name" 
+                  placeholder="Tu nombre completo" minlength="6" maxlength="30" autofocus>
+                  <div class="invalid-feedback">El nombre y apellido deben tener entre 6 y 30 caracteres.</div>
               </div>
               <div class="mb-3">
                 <label for="email" class="form-label">Correo electrónico</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="nombre@ejemplo.com" required>
+                <input type="email" class="form-control" id="email" name="email" 
+                  placeholder="nombre@ejemplo.com" required>
+                <div class="invalid-feedback">Introduce un correo electrónico válido.</div>
               </div>
               <div class="mb-3">
                 <label for="message" class="form-label">Mensaje</label>
                 <textarea class="form-control" id="message" name="message" rows="4" required
+                  minlength="10" maxlength="500"
                   placeholder="Escribe tu mensaje aquí..."></textarea>
+                <div class="invalid-feedback">El mensaje debe tener entre 10 y 500 caracteres.</div>
               </div>
                 <div class="mb-3" id="validation-feedback" style="color: red;"></div>
                 <input type="hidden" name="_subject" value="Nuevo Mensaje de Contacto - WappTurno">
@@ -98,24 +104,20 @@
   </main>
 
   <footer class="bg-light text-center py-3 mt-auto border-top">
-    <p class="mb-0 text-secondary">&copy; 2025 - WappTurno - B no es un número</p>
-  </footer>
+  <p class="mb-0 text-secondary">
+    &copy; 2025 - WappTurno - B no es un número  | 
+    <a href="./privacy-policy.html" class="text-decoration-none text-secondary">
+      Políticas de Privacidad
+    </a>
+  </p>
+</footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     crossorigin="anonymous"></script>
 
   <script src="../js/nav.js" defer></script>
   <script src="../js/contact.js" defer></script>
-  <script>
-    const logoutBtn = document.getElementById("logoutBtn");
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("login");
-        localStorage.removeItem("appointments");
-        window.location.href = "../index.html";
-      });
-    }
-  </script>
+  <script src="../js/logout.js" defer></script>
 </body>
 
 </html>

@@ -23,6 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
             error = `El campo ${fieldName} es obligatorio.`;
         }
 
+        else if (input.hasAttribute('minlength') && value.length < input.minLength) {
+            error = `El campo ${fieldName} debe tener al menos ${input.minLength} caracteres.`;
+        }
+
+        else if (input.hasAttribute('maxlength') && value.length > input.maxLength) {
+            error = `El campo ${fieldName} no puede superar los ${input.maxLength} caracteres.`;
+        }
+
         else if (isEmail && !emailRegex.test(value)) {
             error = "El formato del Correo electrónico es inválido.";
         }
@@ -52,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const isValid = currentErrors.length === 0;
 
-        if (currentErrors.length > 0) {
+        if (isValid) {
             feedbackDiv.innerHTML = '<ul class="list-unstyled mb-0">' + currentErrors.map(e => `<li><i class="bi bi-x-circle-fill me-2"></i>${e}</li>`).join('') + '</ul>';
         } else {
             feedbackDiv.innerHTML = '';
