@@ -49,7 +49,7 @@
   <div class="container mt-5 mb-5 col-lg-6">
     <div class="card p-4 shadow-lg">
       <h3 class="text-center mb-4 fw-bold text-primary">Registro de Usuario</h3>
-      <form id="registerForm" method="GET" novalidate>
+      <form id="registerForm" method="GET">
         <div class="mb-3">
           <label for="name" class="form-label">Nombre (*)</label>
           <input
@@ -57,12 +57,12 @@
             class="form-control"
             id="name"
             name="name"
-            minlength="2"
-            maxlength="30"
+            minlength="3"
+            maxlength="15"
             required
             autofocus
           />
-          <div class="invalid-feedback">El nombre debe tener al menos 2(dos) caracteres.</div>
+          <div class="invalid-feedback">El nombre debe tener entre 3 y 15 caracteres.</div>
         </div>
 
         <div class="mb-3">
@@ -73,10 +73,10 @@
             id="surname"
             name="surname"
             minlength="2"
-            maxlength="30"
+            maxlength="15"
             required
           />
-          <div class="invalid-feedback">El apellido debe tener al menos 2(dos) caracteres.</div>
+          <div class="invalid-feedback">El apellido debe tener entre 3 y 15 caracteres.</div>
         </div>
 
         <div class="mb-3">
@@ -87,11 +87,8 @@
             class="form-control"
             id="dni"
             name="dni"
-            min="1000000"
-            max="99999999"
             minlength="7"
             maxlength="8"
-            pattern="\d{7,8}"
             required
           />
           <div class="form-text text-muted">Ingrese entre 7 y 8 dígitos numéricos.</div>
