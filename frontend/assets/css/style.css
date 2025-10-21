@@ -4,8 +4,6 @@ body {
   font-family: "Roboto", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
 }
 
-/* SECCION DE CARACTERISTICAS DEL INDEX */
-
 .features .col-md-4 {
   background: #fff;
   padding: 1.5rem;
@@ -33,10 +31,6 @@ body {
   color: #0d6efd;
 }
 
-/* FIN SECCION DE CARACTERISTICAS DEL INDEX */
-
-/* SECCION SERVICIOS */
-
 .services-grid .card {
   transition: transform 0.2s ease;
 }
@@ -61,5 +55,4 @@ body {
   color: #0d6efd;
 }
 
-/*FIN SECCION SERVICIOS */
 

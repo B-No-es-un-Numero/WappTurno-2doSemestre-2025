@@ -9,6 +9,7 @@ class AvailabilityDAO:
     def __init__(self):
        pass
 
+
     def open_connection(self):
         if hasattr(self, "__connection") and self.__connection.is_connected(): 
             pass
