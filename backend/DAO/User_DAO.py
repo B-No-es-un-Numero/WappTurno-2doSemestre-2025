@@ -161,6 +161,7 @@ class UserDAO:
                     return self.__create_user_dto(row)
             
         except mysql.connector.Error as error:
+            self.__connection.rollback()
             raise Exception(f"Error al insertar: {error}")
         finally: self.__connection.close()
     
@@ -174,6 +175,7 @@ class UserDAO:
                 self.__connection.commit()
                 return True
         except mysql.connector.Error as error:
+            self.__connection.rollback()
             raise Exception(f"Error al cambiar el rol del usuario: {error}")
         finally: self.__connection.close()
 
@@ -187,6 +189,7 @@ class UserDAO:
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as error:
+            self.__connection.rollback()
             raise Exception(f"Error al deshabilitar el usuario: {error}")
         finally: self.__connection.close()
     
@@ -200,6 +203,7 @@ class UserDAO:
                 self.__connection.commit()
                 return cursor.rowcount > 0
         except mysql.connector.Error as error:
+            self.__connection.rollback()
             raise Exception(f"Error al eliminar permanentemente el usuario: {error}")
         finally: self.__connection.close()
 
@@ -224,6 +228,7 @@ class UserDAO:
                 if row:
                     return self.__create_user_dto(row)
         except mysql.connector.Error as error:
+            self.__connection.rollback()
             raise Exception(f"Error al insertar: {error}")
         finally: self.__connection.close()
 
