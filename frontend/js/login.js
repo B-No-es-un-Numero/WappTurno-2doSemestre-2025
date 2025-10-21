@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
             disableSubmit(false);
 
             if (emailValue === validEmail && passwordValue === validPassword) {
-                window.location.href = "../index.html";
+                window.location.href = "./my-appointments.html";
                 localStorage.setItem("login", true);
             } else {
                 showLoginError("Email o contraseña incorrectos. Intenta nuevamente.");
