@@ -23,6 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
             error = `El campo ${fieldName} es obligatorio.`;
         }
 
+        else if (input.hasAttribute('minlength') && value.length < input.minLength) {
+            error = `El campo ${fieldName} debe tener al menos ${input.minLength} caracteres.`;
+        }
+
+        else if (input.hasAttribute('maxlength') && value.length > input.maxLength) {
+            error = `El campo ${fieldName} no puede superar los ${input.maxLength} caracteres.`;
+        }
+
         else if (isEmail && !emailRegex.test(value)) {
             error = "El formato del Correo electrónico es inválido.";
         }
