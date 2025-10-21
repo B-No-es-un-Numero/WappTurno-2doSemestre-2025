@@ -53,13 +53,13 @@ class UserDAO:
                         created_user.license_number,
                     ),
                 )   
-            self.__connection.commit()  
+            self.__connection.commit()
+            return created_user  
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al insertar en la base de datos: {error}") 
         finally:        
             self.__connection.close()  
-        return created_user
         
 
     def get_user_by_id(self, user_id: str) -> User | None:
