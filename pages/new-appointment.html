@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <link rel="icon" type="image/png" href="../assets/img/favicon.png">
-    <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -51,8 +50,6 @@
                                 class="bi bi-person-circle"></i> Mi Cuenta </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="my-appointments.html">Mis turnos</a></li>
-                            <li><a class="dropdown-item" href="#">Panel principal</a></li>
-                            <li><a class="dropdown-item" href="#">Mi Perfil</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -70,18 +67,26 @@
                 <div class="col-lg-8">
                     <div class="card shadow-lg p-4">
                         <div class="card-body">
-                            <h2 class="text-center mb-4 text-primary">
+                            <h1 class="text-center mb-4 text-primary">
                                 <i class="bi bi-calendar-plus"></i> Reservar Nuevo Turno
-                            </h2>
+                            </h1>
                             <form>
                                 <div class="mb-3">
                                     <label for="specialty" class="form-label fw-bold">Especialidad</label>
-                                    <input type="text" class="form-control" id="specialty" value="Clínica General"
-                                        disabled>
+                                    <select class="form-select" id="specialty" required autofocus>
+                                        <option selected disabled value="">Selecciona una especialidad...</option>
+                                        <option value="1">Clínica General</option>
+                                        <option value="2">Cardiología</option>
+                                        <option value="3">Odontología</option>
+                                        <option value="4">Oftalmología</option>
+                                        <option value="5">Neurología</option>
+                                        <option value="6">Pediatría</option>
+                                    </select>
+                                    <div class="invalid-feedback">Por favor seleccioná una especialidad.</div>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="doctor" class="form-label fw-bold">Selecciona un profesional</label>
+                                    <label for="doctor" class="form-label fw-bold">Profesional</label>
                                     <select class="form-select" id="doctor" required>
                                         <option selected disabled value="">Selecciona un profesional...</option>
                                         <option value="1">Dr. Juan Pérez</option>
@@ -94,7 +99,7 @@
                                 <div class="mb-3">
                                     <label for="appointmentDate" class="form-label fw-bold">Selecciona una fecha</label>
                                     <input type="date" class="form-control" id="appointmentDate" required>
-                                    <div class="invalid-feedback">Por favor seleccioná una fecha válida.</div>
+                                    <div class="invalid-feedback">Por favor seleccioná una fecha válida (no pasada).</div>
                                 </div>
 
                                 <div class="mb-3">
@@ -122,23 +127,19 @@
     </main>
 
     <footer class="bg-light text-center py-3 mt-auto border-top">
-        <p class="mb-0 text-secondary">&copy; 2025 - WappTurno - B no es un número</p>
-    </footer>
+  <p class="mb-0 text-secondary">
+    &copy; 2025 - WappTurno - B no es un número  | 
+    <a href="./privacy-policy.html" class="text-decoration-none text-secondary">
+      Políticas de Privacidad
+    </a>
+  </p>
+</footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="../js/nav.js" defer></script>
     <script src="../js/new-appointment.js" defer></script>
-    <script>
-        const logoutBtn = document.getElementById("logoutBtn");
-        if (logoutBtn) {
-        logoutBtn.addEventListener("click", () => {
-            localStorage.removeItem("login");
-            localStorage.removeItem("appointments");
-            window.location.href = "../index.html";
-        });
-        }
-    </script>
+    <script src="../js/logout.js" defer></script>
 </body>
 
 </html>
