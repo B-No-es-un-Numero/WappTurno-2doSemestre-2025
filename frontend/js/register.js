@@ -44,7 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
   confirmPassword.addEventListener('input', checkPasswordMatch);
 
   dniInput.addEventListener("input", (e) => {
-    e.target.value = e.target.value.replace(/\D/g, ""); 
+    e.target.value = e.target.value.replace(/\D/g, "");
+    if (e.target.value.startsWith("0")) {
+    e.target.value = e.target.value.replace(/^0+/, "");
+    } 
     if (e.target.value.length > 8) {
       e.target.value = e.target.value.slice(0, 8); 
     }
