@@ -1,3 +1,4 @@
+from Models.Appointment import Appointment
 from Models.Appointment_state_enum import AppointmentStateEnum
 from Presentation.Base_user_menu import BaseUserMenu
 from Models.Role_enum import RoleEnum
