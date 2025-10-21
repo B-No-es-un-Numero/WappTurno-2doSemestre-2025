@@ -5,6 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
   logoutBtn.addEventListener("click", () => {
     localStorage.removeItem("login");
     localStorage.removeItem("appointments");
-    window.location.href = "../index.html";
-  });
+    
+    const currentPath = window.location.pathname;
+
+    if (currentPath.endsWith("index.html") || currentPath === "/") {
+      window.location.href = "index.html";
+    } else {
+      window.location.href = "../index.html";
+  }});
 });
+
