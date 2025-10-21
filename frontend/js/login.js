@@ -7,33 +7,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const validEmail = "turno@admin.com";
     const validPassword = "T12345";
 
+     [emailInput, passwordInput].forEach((input) => {
+        input.addEventListener("input", () => {
+        if (input.checkValidity()) {
+            input.classList.remove("is-invalid");
+            input.classList.add("is-valid");
+        } else {
+            input.classList.remove("is-valid");
+            input.classList.add("is-invalid");
+        }
+        });
+    });
+
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-
-        emailInput.classList.remove("is-invalid");
-        passwordInput.classList.remove("is-invalid");
         removeLoginError();
 
-        const emailValue = emailInput.value.trim();
-        const passwordValue = passwordInput.value.trim();
-        let isValid = true;
-
-        if (!emailValue || !emailInput.checkValidity()) {
-            emailInput.classList.add("is-invalid");
-            isValid = false;
+        if (!form.checkValidity()) {
+            event.stopPropagation();
+            form.classList.add("was-validated");
+            return;
         }
-
-        if (!passwordValue || passwordValue.length !== 6) {
-            passwordInput.classList.add("is-invalid");
-            isValid = false;
-        }
-
-        if (!isValid) return;
 
         disableSubmit(true);
 
         setTimeout(() => {
             disableSubmit(false);
+            const emailValue = emailInput.value.trim();
+            const passwordValue = passwordInput.value.trim();
 
             if (emailValue === validEmail && passwordValue === validPassword) {
                 window.location.href = "../index.html";
