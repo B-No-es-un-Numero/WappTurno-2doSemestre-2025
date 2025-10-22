@@ -22,29 +22,30 @@ class AppointmentDAO:
         
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query = (
-                    "INSERT INTO Appointments (id, date_and_time, user_id, doctor_id, medical_consultation_id, frequency, state, enabled) "
-                    "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-                )
-                cursor.execute(query, (
-                    appointment.appointment_id,
-                    appointment.date_and_time,
-                    appointment.user_id,
-                    appointment.doctor_id,
-                    appointment.medical_consultation_id,
-                    appointment.frequency,
-                    appointment.state.value,
-                    appointment.enabled
-                ))
-                self.__connection.commit()
-                return True
+            cursor = self.__connection.cursor()
+            query = (
+                "INSERT INTO Appointments (id, date_and_time, user_id, doctor_id, medical_consultation_id, frequency, state, enabled) "
+                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+            )
+            cursor.execute(query, (
+                appointment.appointment_id,
+                appointment.date_and_time,
+                appointment.user_id,
+                appointment.doctor_id,
+                appointment.medical_consultation_id,
+                appointment.frequency,
+                appointment.state.value,
+                appointment.enabled
+            ))
+            self.__connection.commit()
+            return True
                 
         except mysql.connector.Error as err:
             self.__connection.rollback()
             print(f"Error al crear el turno: {err}")
             return None
         finally:
+            cursor.close()
             self.__connection.close()
 
 
@@ -52,33 +53,35 @@ class AppointmentDAO:
         
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query = "UPDATE Appointments SET date_and_time = %s " \
-                        "WHERE id = %s AND enabled = TRUE"
-                cursor.execute(query, (date_and_time, appointment_id))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor()
+            query = "UPDATE Appointments SET date_and_time = %s " \
+                    "WHERE id = %s AND enabled = TRUE"
+            cursor.execute(query, (date_and_time, appointment_id))
+            self.__connection.commit()
+            return cursor.rowcount > 0
         except mysql.connector.Error as err:
             self.__connection.rollback()
             print(f"Error al reprogramar turno: {err}")
             return False
         finally:
+            cursor.close()
             self.__connection.close()
 
 
     def delete_appointment(self, appointment_id: str):
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query = "UPDATE Appointments SET enabled = FALSE WHERE id = %s"
-                cursor.execute(query, (appointment_id,))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor()
+            query = "UPDATE Appointments SET enabled = FALSE WHERE id = %s"
+            cursor.execute(query, (appointment_id,))
+            self.__connection.commit()
+            return cursor.rowcount > 0
         except mysql.connector.Error as err:
             self.__connection.rollback()
             print(f"Error al eliminar turno: {err}")
             return False
         finally:
+            cursor.close()
             self.__connection.close()
 
 
@@ -86,20 +89,21 @@ class AppointmentDAO:
         
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query = (
-                    "UPDATE Appointments SET frequency = %s "
-                    "WHERE id = %s AND enabled = TRUE"
-                )
-                cursor.execute(query, (frequency, appointment_id))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor()
+            query = (
+                "UPDATE Appointments SET frequency = %s "
+                "WHERE id = %s AND enabled = TRUE"
+            )
+            cursor.execute(query, (frequency, appointment_id))
+            self.__connection.commit()
+            return cursor.rowcount > 0
                 
         except mysql.connector.Error as err:
             self.__connection.rollback()
             print(f"Error al actualizar frecuencia: {err}")
             return False
         finally:
+            cursor.close()
             self.__connection.close()
 
 
@@ -107,20 +111,21 @@ class AppointmentDAO:
         
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query = (
-                    "UPDATE Appointments SET state = %s "
-                    "WHERE id = %s AND enabled = TRUE"
-                )
-                cursor.execute(query, (appointment_state_enum.value, appointment_id))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor()
+            query = (
+                "UPDATE Appointments SET state = %s "
+                "WHERE id = %s AND enabled = TRUE"
+            )
+            cursor.execute(query, (appointment_state_enum.value, appointment_id))
+            self.__connection.commit()
+            return cursor.rowcount > 0
                 
         except mysql.connector.Error as err:
             self.__connection.rollback()
             print(f"Error al actualizar estado: {err}")
             return False
         finally:
+            cursor.close()
             self.__connection.close()
 
 
