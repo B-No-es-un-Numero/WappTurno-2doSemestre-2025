@@ -6,9 +6,11 @@ from Models.Role_enum import RoleEnum
 
 class AdminMenu(BaseUserMenu):
 
+
     def __init__(self, user_service, appointment_service, user):
         super().__init__(user_service, user, appointment_service)
         self._user_service = user_service
+
 
     def run(self):
         while True:
@@ -50,10 +52,12 @@ class AdminMenu(BaseUserMenu):
             else:
                 print("Opción no válida.\n")
 
+
     def list_users(self):
         users = self._user_service.get_all_users()
         for u in users or []:
             print(f"- {u.user_id} {u.name} {u.surname} ({u.role.value})")
+
 
     def list_users_by_role(self):
         role_map = {"1": RoleEnum.PATIENT, "2": RoleEnum.DOCTOR, "3": RoleEnum.ADMIN}
@@ -65,15 +69,18 @@ class AdminMenu(BaseUserMenu):
         else:
             print("Error: Rol inválido.")
 
+
     def find_user_by_id(self):
         uid = input("ID del usuario: ")
         user = self._user_service.get_user_by_id(uid)
         print(user or "Usuario no encontrado. Corrobore el Id.")
 
+
     def find_user_by_email(self):
         email = input("Email: ")
         user = self._user_service.get_user_by_email(email)
         print(user or "Usuario no encontrado. Corrobore el email.")
+
 
     def change_role(self):
         email = input("Ingrese el email del usuario cuyo rol desea cambiar: ")
@@ -83,10 +90,12 @@ class AdminMenu(BaseUserMenu):
             self._user_service.change_user_role(email, role)
             print("Rol actualizado exitosamente.\n")
 
+
     def delete_user(self):
         email = input("Ingrese el email del usuario a eliminar: ")
         self._user_service.delete_account(email)
         print("Usuario eliminado exitosamente.\n")
+
 
     def show_appointments(self):
         users = self._user_service.get_all_users()
@@ -98,6 +107,7 @@ class AdminMenu(BaseUserMenu):
             print("No hay turnos registrados.\n")
             return
         self.__print_appointments(data)
+
 
     def delete_appointment(self):
         users = self._user_service.get_all_users()
@@ -121,6 +131,7 @@ class AdminMenu(BaseUserMenu):
                 print("No se pudo eliminar el turno. Recuerde cancelarlo previamente.\n")
         else:
             print("Operación cancelada.\n")
+
 
     def __print_appointments(self, data: list['Appointment']):
         print("\n=== TURNOS ===\n")

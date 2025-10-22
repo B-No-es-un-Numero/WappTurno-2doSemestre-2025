@@ -6,8 +6,10 @@ from datetime import datetime
 
 class PatientMenu(BaseUserMenu):
 
+
     def __init__(self, user_service, appointment_service, user):
         super().__init__(user_service, user, appointment_service)
+
 
     def run(self):
         while True:
@@ -34,6 +36,7 @@ class PatientMenu(BaseUserMenu):
             else:
                 print("Opción no válida.\n")
 
+
     def show_appointments(self):
         data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, True)
         if not data:
@@ -41,6 +44,7 @@ class PatientMenu(BaseUserMenu):
             return
         else:
             self.__print_appointments(data)
+
 
     def create_appointment(self):
         doctors = self._user_service.get_all_users_by_role(RoleEnum.DOCTOR)
@@ -65,6 +69,7 @@ class PatientMenu(BaseUserMenu):
         else:
             print("Turno creado exitosamente.\n")
 
+
     def reschedule_appointment(self):
         data = self._appointment_service.get_all_appointments_by_user_id(self.user.user_id, False)
         if not data:
@@ -84,6 +89,7 @@ class PatientMenu(BaseUserMenu):
                 print("No se pudo reprogramar el turno.\n")
         except ValueError:
             print("Formato de fecha u hora inválido.\n")
+
 
     def __print_appointments(self, data: list['Appointment']):
         print("\n=== TURNOS ===\n")
