@@ -19,46 +19,47 @@ class UserDAO:
     def register_user(self, created_user: User):
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query_user = (
-                "INSERT INTO Users (id, name, surname, dni, email, password, phone_number, role, date_of_birth, enabled) "
-                "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            cursor = self.__connection.cursor()
+            query_user = (
+            "INSERT INTO Users (id, name, surname, dni, email, password, phone_number, role, date_of_birth, enabled) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            )
+            cursor.execute(
+            query_user,
+            (
+                created_user.user_id,
+                created_user.name,
+                created_user.surname,
+                created_user.dni,
+                created_user.email,
+                created_user.password,
+                created_user.phone_number,
+                created_user.role.name,
+                created_user.date_of_birth,
+                created_user.enabled,
+            ),
+            )  
+            if (created_user.role.name == "DOCTOR"):
+                query_doctor = (
+                    "INSERT INTO Doctors (user_id, specialty, accepts_medical_insurance, license_number) "
+                    "VALUES (%s, %s, %s, %s)"
                 )
                 cursor.execute(
-                query_user,
+                query_doctor,
                 (
                     created_user.user_id,
-                    created_user.name,
-                    created_user.surname,
-                    created_user.dni,
-                    created_user.email,
-                    created_user.password,
-                    created_user.phone_number,
-                    created_user.role.name,
-                    created_user.date_of_birth,
-                    created_user.enabled,
+                    created_user.specialty,
+                    created_user.accepts_medical_insurance,
+                    created_user.license_number,
                 ),
             )   
-                if (created_user.role.name == "DOCTOR"):
-                    query_doctor = (
-                        "INSERT INTO Doctors (user_id, specialty, accepts_medical_insurance, license_number) "
-                        "VALUES (%s, %s, %s, %s)"
-                    )
-                    cursor.execute(
-                    query_doctor,
-                    (
-                        created_user.user_id,
-                        created_user.specialty,
-                        created_user.accepts_medical_insurance,
-                        created_user.license_number,
-                    ),
-                )   
             self.__connection.commit()
             return created_user  
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al insertar en la base de datos: {error}") 
         finally:        
+            cursor.close() 
             self.__connection.close()  
         
 
@@ -147,90 +148,99 @@ class UserDAO:
                     email: str, password: str, phone_number: int) -> User | None:
         try:
             self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Users SET name = %s, surname = %s,  dni = %s,"
-                "password = %s, phone_number = %s WHERE email = %s")
-                cursor.execute(query, (name, surname, dni, password, phone_number, email))
-                self.__connection.commit()
-                if cursor.rowcount == 0:
-                    return None
-                
-                cursor.execute("SELECT * FROM Users WHERE email = %s", (email,))
-                row = cursor.fetchone()
-                if row:
-                    return self.__create_user_dto(row)
+            cursor = self.__connection.cursor(dictionary=True)
+            query= ("UPDATE Users SET name = %s, surname = %s,  dni = %s,"
+            "password = %s, phone_number = %s WHERE email = %s")
+            cursor.execute(query, (name, surname, dni, password, phone_number, email))
+            self.__connection.commit()
+            if cursor.rowcount == 0:
+                return None
             
+            cursor.execute("SELECT * FROM Users WHERE email = %s", (email,))
+            row = cursor.fetchone()
+            if row:
+                return self.__create_user_dto(row)
+        
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al insertar: {error}")
-        finally: self.__connection.close()
+        finally: 
+            cursor.close()
+            self.__connection.close()
     
 
     def change_user_role(self, user_email: str, role: RoleEnum) -> bool:
         try:
             self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Users SET role = %s WHERE email = %s")
-                cursor.execute(query, (role, user_email,))
-                self.__connection.commit()
-                return True
+            cursor = self.__connection.cursor(dictionary=True)
+            query= ("UPDATE Users SET role = %s WHERE email = %s")
+            cursor.execute(query, (role, user_email,))
+            self.__connection.commit()
+            return True
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al cambiar el rol del usuario: {error}")
-        finally: self.__connection.close()
+        finally: 
+            cursor.close()
+            self.__connection.close()
 
 
     def disable_account(self, email: str,) -> bool:
         try:
             self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Users SET enabled = FALSE WHERE email = %s")
-                cursor.execute(query, (email,))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor(dictionary=True)
+            query= ("UPDATE Users SET enabled = FALSE WHERE email = %s")
+            cursor.execute(query, (email,))
+            self.__connection.commit()
+            return cursor.rowcount > 0
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al deshabilitar el usuario: {error}")
-        finally: self.__connection.close()
+        finally:
+            cursor.close()
+            self.__connection.close()
     
 
     def delete_account(self, email: str) -> bool:
         try:
             self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query = "DELETE FROM Users WHERE email = %s"
-                cursor.execute(query, (email,))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor(dictionary=True)
+            query = "DELETE FROM Users WHERE email = %s"
+            cursor.execute(query, (email,))
+            self.__connection.commit()
+            return cursor.rowcount > 0
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al eliminar permanentemente el usuario: {error}")
-        finally: self.__connection.close()
+        finally:
+            cursor.close()
+            self.__connection.close()
 
 
     def update_doctor(self, doctor_id: str, specialty: str, accepts_medical_insurence: bool,
                               license_number: int) -> Doctor | None:
         try:
             self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query= ("UPDATE Doctors SET specialty = %s, accepts_medical_insurance = %s,"
-                "license_number = %s WHERE user_id = %s")
-                cursor.execute(query, (specialty, accepts_medical_insurence,
-                                       license_number, doctor_id))
-                self.__connection.commit()
-                if cursor.rowcount == 0:
-                    return None
-
-                cursor.execute("SELECT * FROM Users " \
-                "JOIN Doctors ON Users.id = Doctors.user_id " \
-                "WHERE id = %s", (doctor_id,))
-                row = cursor.fetchone()
-                if row:
-                    return self.__create_user_dto(row)
+            cursor = self.__connection.cursor(dictionary=True)
+            query= ("UPDATE Doctors SET specialty = %s, accepts_medical_insurance = %s,"
+            "license_number = %s WHERE user_id = %s")
+            cursor.execute(query, (specialty, accepts_medical_insurence,
+                                   license_number, doctor_id))
+            self.__connection.commit()
+            if cursor.rowcount == 0:
+                return None
+            cursor.execute("SELECT * FROM Users " \
+            "JOIN Doctors ON Users.id = Doctors.user_id " \
+            "WHERE id = %s", (doctor_id,))
+            row = cursor.fetchone()
+            if row:
+                return self.__create_user_dto(row)
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al insertar: {error}")
-        finally: self.__connection.close()
+        finally:
+            cursor.close()
+            self.__connection.close()
 
 
     def __create_user_dto(self, data_row) -> User:
