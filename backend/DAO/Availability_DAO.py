@@ -19,19 +19,19 @@ class AvailabilityDAO:
     def add(self, new_availability: Availability) -> Availability:
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query_availability = (
-                "INSERT INTO Availability (id, doctor_id, time_frame, days) "
-                "VALUES (%s, %s, %s, %s)"
-                )
-                cursor.execute(
-                query_availability,
-                (
-                    new_availability.id,
-                    new_availability.doctor_id,
-                    new_availability.time_frame,
-                    new_availability.days
-                ),
+            cursor = self.__connection.cursor()
+            query_availability = (
+            "INSERT INTO Availability (id, doctor_id, time_frame, days) "
+            "VALUES (%s, %s, %s, %s)"
+            )
+            cursor.execute(
+            query_availability,
+            (
+                new_availability.id,
+                new_availability.doctor_id,
+                new_availability.time_frame,
+                new_availability.days
+            ),
             )    
             self.__connection.commit()
             return new_availability  
@@ -39,43 +39,47 @@ class AvailabilityDAO:
             self.__connection.rollback()
             raise Exception(f"Error al insertar en la base de datos: {error}") 
         finally:        
+            cursor.close()
             self.__connection.close()  
     
 
     def delete(self, availability_id: str) -> bool:
         try:
             self.open_connection()
-            with self.__connection.cursor(dictionary=True) as cursor:
-                query = "DELETE FROM Availability WHERE id = %s"
-                cursor.execute(query, (availability_id,))
-                self.__connection.commit()
-                return cursor.rowcount > 0
+            cursor = self.__connection.cursor()
+            query = "DELETE FROM Availability WHERE id = %s"
+            cursor.execute(query, (availability_id,))
+            self.__connection.commit()
+            return cursor.rowcount > 0
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al eliminar el horario: {error}")
-        finally: self.__connection.close()
+        finally: 
+            cursor.close()
+            self.__connection.close()
 
 
     def update(self, availability_id: str, time_frame: TimeFrameEnum, days: DaysEnum) -> bool:    
         try:
             self.open_connection()
-            with self.__connection.cursor() as cursor:
-                query_availability = (
-                "UPDATE Availability SET time_frame=%s, days=%s "
-                "WHERE id=%s"
-                )
-                cursor.execute(
-                query_availability,
-                (time_frame,days,availability_id,),
+            cursor = self.__connection.cursor()
+            query_availability = (
+            "UPDATE Availability SET time_frame=%s, days=%s "
+            "WHERE id=%s"
+            )
+            cursor.execute(
+            query_availability,
+            (time_frame,days,availability_id,),
             )    
-            self.__connection.commit()  
+            self.__connection.commit()
+            return True  
         except mysql.connector.Error as error:
             self.__connection.rollback()
             raise Exception(f"Error al insertar en la base de datos: {error}") 
         finally:        
+            cursor.close()
             self.__connection.close()  
-        return True
-
+        
 
     def get_all_by_doctor_id(self, doctor_id: str) -> list['Availability']:
         try:
