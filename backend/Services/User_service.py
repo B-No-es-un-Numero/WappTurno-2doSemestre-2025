@@ -5,8 +5,10 @@ from Models.Role_enum import RoleEnum
 from DAO.User_DAO import UserDAO
 
 class UserService:
+
     def __init__(self, dao: UserDAO):
         self._dao = dao
+
 
     def register( self, name: str, surname: str, dni: int, email: str, password: str,
         phone_number: int, role: RoleEnum, date_of_birth: str, specialty: str = None,
@@ -64,6 +66,7 @@ class UserService:
 
         return created_user
         
+
     def login(self, user_email: str, password: str) -> User:
         data = self._dao.get_user_by_email(user_email, close=False)
         if data is None:
@@ -73,12 +76,14 @@ class UserService:
         else:
             return None
 
+
     def get_user_by_id(self, user_id: str) -> 'User':
         user = self._dao.get_user_by_id(user_id)
         if user is None:
             print("No se encontró el usuario buscado. \n")
             return None
         return user
+
 
     def get_user_by_email(self, user_email: str) -> 'User':
         user = self._dao.get_user_by_email(user_email)
@@ -91,6 +96,7 @@ class UserService:
         users = self._dao.get_all_users()
         return users
    
+
     def get_all_users_by_role(self, role: RoleEnum) -> list['User']:
         users = self._dao.get_all_users_by_role(role)
         return users

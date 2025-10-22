@@ -7,12 +7,14 @@ from Presentation.Doctor_menu import DoctorMenu
 from Presentation.Admin_menu import AdminMenu
 
 class Menu:
+
     def __init__(self, user_service: UserService, availability_service: AvailabilityService,
                  appointment_service: AppointmentService):
         self._user_service = user_service
         self._availability_service = availability_service
         self._appointment_service = appointment_service
         self.current_user = None
+
 
     def run_menu(self):
         while True:
@@ -21,6 +23,7 @@ class Menu:
                 self.run_role_menu()
             else:
                 self.show_guest_menu()
+
 
     def show_guest_menu(self):
         option = input(
@@ -39,6 +42,7 @@ class Menu:
             exit()
         else:
             print("Opción no válida.\n")
+
 
     def register_user(self):
         name = input("Nombre: ")
@@ -85,6 +89,7 @@ class Menu:
         )
         print("Usuario registrado exitosamente.\n")
 
+
     def login(self):
         email = input("Email: ")
         password = input("Contraseña: ")
@@ -92,6 +97,7 @@ class Menu:
         if not self.current_user:
             print("\nEmail o contraseña incorrectos. Intente nuevamente.\n")
             return
+
 
     def run_role_menu(self):
         role = self.current_user.role

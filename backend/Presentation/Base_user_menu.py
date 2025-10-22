@@ -5,16 +5,19 @@ from Services.Appointment_service import AppointmentService
 
 class BaseUserMenu:
     
+
     def __init__(self, user_service, user, appointment_service: AppointmentService):
         self._appointment_service = appointment_service
         self._user_service = user_service
         self.user = user
+
 
     def show_common_options(self):
         print("1. Editar datos personales")
         print("2. Dar de baja mi cuenta")
         print("3. Editar frecuencia de un turno")
         print("4. Editar estado de un turno")
+
 
     def handle_common_options(self, option):
         if option == "1":
@@ -30,6 +33,7 @@ class BaseUserMenu:
             self.update_state()
             return True
         return False
+
 
     def update_profile(self):
         email = input("Confirme su email: ")
@@ -48,6 +52,7 @@ class BaseUserMenu:
         self._user_service.update_user(name, surname, dni, email, phone, password)
         print("Datos actualizados.\n")
 
+
     def disable_account(self):
         email = input("Confirme su email para dar de baja: ")
         if email == self.user.email:
@@ -56,6 +61,7 @@ class BaseUserMenu:
             exit()
         else:
             print("Email incorrecto.\n")
+
 
     def update_frequency(self):
         if(self.user.role == RoleEnum.ADMIN):
@@ -77,6 +83,7 @@ class BaseUserMenu:
         appointment_id = input("\n Ingrese el ID del turno: ")
         frequency = input("\n Ingrese nueva frecuencia (semanal/mensual/quincenal): ")
         self._appointment_service.update_frequency(appointment_id, frequency)
+
 
     def update_state(self):
         if(self.user.role == RoleEnum.ADMIN):
@@ -107,6 +114,7 @@ class BaseUserMenu:
             self._appointment_service.update_state(appointment_id, new_state)
         else:
             print("Opción inválida.\n")
+
     
     def __print_appointments(self, data: list['Appointment']):
         print("\n=== TURNOS ===\n")
